@@ -1,4 +1,4 @@
-# hodlcontracts
+# Hodl contracts
 A non-custodial oracle and escrow system for the lightning network. Makes LN contracts more functional.
 
 if you fire it up, be aware:
