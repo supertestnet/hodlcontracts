@@ -15,7 +15,7 @@ If you fire it up, be aware:
 
 (6) next go to localhost:5000/?user=bob
 
-(7) you'll see Alice's contract dumped onto the screen and a field where you can enter a lightning invoice to take the other side of the bet
+(7) you'll see Alice's contract dumped onto the screen and a field where you can enter a lightning invoice to take the other side of the bet (oh and if you go to Bob's page first before Alice has created a contract, everything will crash)
 
 (8) if you create multiple contracts it will only show the first one because I don't know how to do iteration in python -- consequently if you need to restart the process you'll have to delete the contracts.db file otherwise Bob can only ever take Alice's initial contract
 
