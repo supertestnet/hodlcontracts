@@ -25,6 +25,6 @@ If you fire it up, be aware:
 
 (11) now visit localhost:5000/check/?pmthash=abc...123 where abc...123 is Alice's invoice's payment hash, you can get it from the contract data that is dumped onto both user's screens (it is in the field first_party_pmthash)
 
-(12) If nothing crashed the server should return a blank screen. Now you are done, is2even() returned true and Alice got Bob's money. Bob's invoice just sits there until it expires
+(12) If nothing crashed the server should return a blank screen. Now you are done, is2even() returned true and Alice got Bob's money. Bob's invoice just sits there until it expires, he never gets any money back because he lost the bet
 
 (13) Bob can never win right now because the server doesn't yet know how to do payouts to Bob, only to Alice. I need it to do the same thing it does for Alice but for Bob if is2even() returns false
