@@ -19,7 +19,7 @@ If you fire it up, be aware:
 
 (8) if you create multiple contracts it will only show the first one because I don't know how to do iteration in python -- consequently if you need to restart the process you'll have to delete the contracts.db file otherwise Bob can only ever take Alice's initial contract
 
-(9) enter a new lightning invoice so that Bob's wallet can receive some money if is2even() returns false
+(9) on Bob's screen, enter a new lightning invoice so that Bob's wallet can receive some money if is2even() returns false
 
 (10) okay now Alice should pay Bob's hodl invoice and Bob should pay Alice's hodl invoice -- you can find them in the contract data that is dumped onto both of their screens. Alice's hodl invoice is first_party_hodl_invoice and Bob's is second_party_hodl_invoice
 
