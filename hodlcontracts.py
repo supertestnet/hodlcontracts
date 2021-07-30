@@ -113,6 +113,7 @@ app = Flask(__name__)
 
 @app.route( '/settle/', methods=[ 'POST', 'GET' ] )
 def settler():
+    from flask import request
     contract_id = request.args.get( "id" )
     trueorfalse = request.args.get( "true" )
     con = sqlite3.connect( "contracts.db" )
@@ -122,37 +123,53 @@ def settler():
     con.close()
     datum = json.loads( contracts[ 0 ] )
     if int( trueorfalse ) == 1:
-        original_invoice = str( datum[ "first party original invoice" ] )
-        stub3 = routerstub.RouterStub( channel )
-        trypay = routerrpc.SendPaymentRequest(
-            payment_request=original_invoice,
-            timeout_seconds=15,
-            fee_limit_sat=10
+        pmthash = str( datum[ "first party pmthash" ] )
+        request = ln.PaymentHash(
+            r_hash_str=pmthash
         )
-        fullresponse = []
-        for response in stub3.SendPayment( trypay ):
-            fullresponse.append( response )
-        if len( fullresponse ) > 2:
-            pmtstatus = fullresponse[ 2 ].state
-            if pmtstatus == 1:
-                pmtpmgbytes = str( fullresponse[ 2 ].preimage )
-                pmtpmghex = "".join("{:02x}".format(ord(c)) for c in pmtpmgbytes)
+        response = stub.LookupInvoice( request )
+        status = response.state
+        if status == 3:
+            original_invoice = str( datum[ "first party original invoice" ] )
+            stub3 = routerstub.RouterStub( channel )
+            trypay = routerrpc.SendPaymentRequest(
+                payment_request=original_invoice,
+                timeout_seconds=15,
+                fee_limit_sat=10
+            )
+            fullresponse = []
+            for response in stub3.SendPayment( trypay ):
+                fullresponse.append( response )
+            if len( fullresponse ) > 2:
+                pmtstatus = fullresponse[ 2 ].state
+                if pmtstatus == 1:
+                    pmtpmgbytes = str( fullresponse[ 2 ].preimage )
+                    pmtpmghex = "".join("{:02x}".format(ord(c)) for c in pmtpmgbytes)
+                    settleInvoice( pmtpmghex )
     else:
-        original_invoice = str( datum[ "second party original invoice" ] )
-        stub3 = routerstub.RouterStub( channel )
-        trypay = routerrpc.SendPaymentRequest(
-            payment_request=original_invoice,
-            timeout_seconds=15,
-            fee_limit_sat=10
+        pmthash = str( datum[ "second party pmthash" ] )
+        request = ln.PaymentHash(
+            r_hash_str=pmthash
         )
-        fullresponse = []
-        for response in stub3.SendPayment( trypay ):
-            fullresponse.append( response )
-        if len( fullresponse ) > 2:
-            pmtstatus = fullresponse[ 2 ].state
-            if pmtstatus == 1:
-                pmtpmgbytes = str( fullresponse[ 2 ].preimage )
-                pmtpmghex = "".join("{:02x}".format(ord(c)) for c in pmtpmgbytes)
+        response = stub.LookupInvoice( request )
+        status = response.state
+        if status == 3:
+            original_invoice = str( datum[ "second party original invoice" ] )
+            stub3 = routerstub.RouterStub( channel )
+            trypay = routerrpc.SendPaymentRequest(
+                payment_request=original_invoice,
+                timeout_seconds=15,
+                fee_limit_sat=10
+            )
+            fullresponse = []
+            for response in stub3.SendPayment( trypay ):
+                fullresponse.append( response )
+            if len( fullresponse ) > 2:
+                pmtstatus = fullresponse[ 2 ].state
+                if pmtstatus == 1:
+                    pmtpmgbytes = str( fullresponse[ 2 ].preimage )
+                    pmtpmghex = "".join("{:02x}".format(ord(c)) for c in pmtpmgbytes)
+                    settleInvoice( pmtpmghex )
     return ""
 
 @app.route( '/contract/', methods=[ 'POST', 'GET' ] )
