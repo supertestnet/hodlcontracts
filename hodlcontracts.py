@@ -7,6 +7,7 @@ import router_pb2_grpc as routerstub
 import grpc
 import os
 import codecs
+import requests
 import json
 import time
 import sqlite3
@@ -49,6 +50,13 @@ def settleInvoice( preimage ):
         preimage=preimage.decode( "hex" )
     )
     return stub2.SettleInvoice( request )
+
+def cancelInvoice( pmthash ):
+    stub2 = invoicesstub.InvoicesStub( channel )
+    request = invoicesrpc.CancelInvoiceMsg(
+        payment_hash=pmthash.decode( "hex" )
+    )
+    return stub2.CancelInvoice( request )
 
 def payFirstParty( pmthash ):
     returnable = "payment failed"
@@ -110,6 +118,24 @@ def makeHash():
     return sha256( rand.encode( 'utf-8' ) ).hexdigest()
 
 app = Flask(__name__)
+
+@app.route( '/cancel/', methods=[ 'POST', 'GET' ] )
+def canceler():
+    from flask import request
+    contract_id = request.args.get( "id" )
+    party = request.args.get( "party" )
+    con = sqlite3.connect( "contracts.db" )
+    cur = con.cursor()
+    cur.execute( "SELECT contract from contracts WHERE contract_id = '" + contract_id + "'" )
+    contracts = cur.fetchone()
+    con.close()
+    datum = json.loads( contracts[ 0 ] )
+    if int( party ) == 1:
+        pmthash = str( datum[ "first party pmthash" ] )
+    else:
+        pmthash = str( datum[ "second party pmthash" ] )
+    returnable = repr( cancelInvoice( pmthash ) )
+    return returnable
 
 @app.route( '/settle/', methods=[ 'POST', 'GET' ] )
 def settler():
@@ -175,7 +201,7 @@ def settler():
 @app.route( '/contract/', methods=[ 'POST', 'GET' ] )
 def contractpage():
     returnable = ""
-    if request.form.get( "contract name" ) is not None:
+    if request.form.get( "contract name" ) is not None and request.args.get( "processing" ) is not None:
         if request.args.get( "id" ) is not None:
             contract_id = request.args.get( "id" )
             contract_name = request.form.get( "contract name" )
@@ -253,7 +279,42 @@ def contractpage():
             cur.execute( "SELECT * from contracts WHERE contract_id = '" + contract_id + "'" )
             contracts = cur.fetchone()
             con.close()
-            returnable = json.dumps( contracts )
+            fullcontract = json.dumps( contracts )
+            returnable = """
+                <body style="margin: 0px; font-family: Helvetica, sans-serif;">
+                        <div id="header" style="height: 50px; background-color: red;">
+                                <h1 style="padding: 7px; color: white;">
+                                        Hodl contracts
+                                </h1>
+                        </div>
+                        <div id="leftside" style="position: absolute; left: 0px; top: 50px; background-color: orange; width: 25%; height: 100%;">
+                        </div>
+                        <div id="middle" style="width: 50%; margin: auto;">
+                                <div style="margin: 10px;">
+                                        <h2>
+                                                Contract {contract_id_short}
+                                        </h2>
+                                        <p>
+						Your submission is being processed. If you are not redirected shortly, <a href="/contract/?id={contract_id}">click here</a>
+					</p>
+                                </div>
+                        </div>
+                        <div id="rightside" style="position: absolute; right: 0px; top: 50px; background-color: blue; width: 25%; height: 100%;">
+                                <div style="margin: 10px; color: white;">
+                                </div>
+                        </div>
+                        <script>
+                                function longBars() {{
+                                        document.getElementById( "leftside" ).style.height = document.body.offsetHeight + "px";
+                                        document.getElementById( "rightside" ).style.height = document.body.offsetHeight + "px";
+                                }}
+                                longBars();
+                        </script>
+                        <script>
+				setTimeout( function() {{ window.location.href = "/contract/?id={contract_id}" }}, 2500 );
+                        </script>
+                </div>
+            """.format( contract_id_short = contract_id[ 0:10 ] + "...", contract_id = contract_id, fullcontract = fullcontract )
     else:
         if request.args.get( "id" ) is not None:
             contract_id = request.args.get( "id" )
@@ -283,10 +344,18 @@ def contractpage():
                                         <h2>
                                                 Contract {contract_id_short}
                                         </h2>
-                                        <p align="center">
-                                                <a id="1st party settlement" target="_blank"><button type="button" style="border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer;">Settle 1st party's invoice</button></a>
-                                                <a id="2nd party settlement" target="_blank"><button type="button" style="border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer;">Settle 2nd party's invoice</button></a>
-                                        </p>
+                                        <div align="center">
+						<div id="1st party" style="display: inline-block; margin-left: 20px; margin-right: 20px;">
+							<p style="font-weight: bold; margin-bottom: 20px;">First party</p>
+	                                                <a id="1st party settlement" target="_blank"><button type="button" style="color: white; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer; margin-bottom: 20px; background-color: green;">Settle</button></a><br>
+	                                                <a id="1st party cancelation" target="_blank"><button type="button" style="color: white; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer; margin-bottom: 20px; background-color: red;">Cancel</button></a><br>
+						</div>
+						<div id="2nd party" style="display: inline-block; margin-left: 20px; margin-right: 20px;">
+							<p style="font-weight: bold; margin-bottom: 20px;">Second party</p>
+	                                                <a id="2nd party settlement" target="_blank"><button type="button" style="color: white; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer; margin-bottom: 20px; background-color: green;">Settle</button></a><br>
+	                                                <a id="2nd party cancelation" target="_blank"><button type="button" style="color: white; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer; margin-bottom: 20px; background-color: red;">Cancel</button></a>
+						</div>
+                                        </div>
                                         <p id="description">
 					</p>
 					<p>
@@ -326,7 +395,9 @@ def contractpage():
                                 document.getElementById( "1st party link" ).href = "/?id=" + json[ "contract id" ] + "&party=1";
                                 document.getElementById( "2nd party link" ).href = "/?id=" + json[ "contract id" ] + "&party=2";
                                 document.getElementById( "1st party settlement" ).href = "/settle/?id=" + json[ "contract id" ] + "&true=1";
+                                document.getElementById( "1st party cancelation" ).href = "/cancel/?id=" + json[ "contract id" ] + "&party=1";
                                 document.getElementById( "2nd party settlement" ).href = "/settle/?id=" + json[ "contract id" ] + "&true=0";
+                                document.getElementById( "2nd party cancelation" ).href = "/cancel/?id=" + json[ "contract id" ] + "&party=2";
                         </script>
                 </div>
             """.format( contract_id_short = contract_id[ 0:10 ] + "...", contract_id = contract_id, contract = contract )
@@ -354,7 +425,7 @@ def adminpage():
                                         <h2>
                                                 New contract
                                         </h2>
-                                        <form method="post" action="/contract/?id={contract_id}">
+                                        <form method="post" action="/contract/?id={contract_id}&processing=true">
                                                 <p style="font-weight: bold;">
                                                         Contract name
                                                 </p>
@@ -474,6 +545,18 @@ def adminpage():
 
 @app.route( '/', methods=[ 'POST', 'GET' ] )
 def extractor():
+    if request.args.get( "id" ):
+        contract_id = request.args.get( "id" )
+        con = sqlite3.connect( "contracts.db" )
+        cur = con.cursor()
+        cur.execute( "SELECT contract from contracts WHERE contract_id = '" + contract_id + "'" )
+        contracts = cur.fetchone()
+        con.close()
+        pricect = json.loads( contracts[ 0 ] )
+        pricefeed = requests.get('https://api.kraken.com/0/public/Ticker?pair=XBTUSD')
+        krakenprice = pricefeed.json().get( "result" ).get( "XXBTZUSD" ).get( "a" )[ 0 ]
+        sats_per_dollar = int( float( "%.8f" % float( 100000000 // int( float ( krakenprice ) ) ) ) )
+        server_fee = int( float( pricect[ "oracle_fee" ] ) ) * sats_per_dollar
     if request.args.get( "party" ) == "1" and request.args.get( "id" ) is not None and request.args.get( "processing" ) is not None:
         returnable = "You already submitted an invoice"
         contract_id = request.args.get( "id" )
@@ -491,7 +574,7 @@ def extractor():
             response = stub.DecodePayReq( query )
             newexpiry = ( ( response.timestamp + response.expiry ) - int( time.time() ) ) - 5
             first_party_pmthash = str( response.payment_hash )
-            amount = response.num_satoshis + 1
+            amount = response.num_satoshis + server_fee
             first_party_hodl_invoice = getInvoice( newexpiry, first_party_pmthash, amount )
             contract_name = str( datum[ "contract name" ] )
             description = str( datum[ "description" ] )
@@ -664,7 +747,7 @@ def extractor():
             response = stub.DecodePayReq( query )
             newexpiry = ( ( response.timestamp + response.expiry ) - int( time.time() ) ) - 5
             second_party_pmthash = str( response.payment_hash )
-            amount = response.num_satoshis + 1
+            amount = response.num_satoshis + server_fee
             second_party_hodl_invoice = getInvoice( newexpiry, second_party_pmthash, amount )
             contract_name = str( datum[ "contract name" ] )
             description = str( datum[ "description" ] )
