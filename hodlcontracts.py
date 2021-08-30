@@ -11,7 +11,6 @@ import requests
 import json
 import time
 import sqlite3
-import hcconditions
 import math
 from random import *
 from hashlib import sha256
