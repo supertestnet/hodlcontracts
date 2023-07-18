@@ -28,3 +28,45 @@ If you fire it up, be aware:
 (7) That's basically it, there is no indicator of what happened after you pick a winner (yet), though you can manually check lnd to see if the payment cleared. Eventually there will be an indicator and a number will tick upward to show what you collected in fees. Remember these payments go directly from one counterparty to the other, you do not take custody at any point!
 
 Lots of bug fixes and improvements to come but it's going well!
+
+# Installation instructions
+
+(1) Run LND in testnet mode (this app only works on testnet) and unlock your testnet wallet with `lncli unlock`
+
+(2) Clone this github repo: `git clone https://github.com/supertestnet/hodlcontracts.git`
+
+(3) Enter the hodlcontracts directory: `cd hodlcontracts`
+
+(4) Ensure you have python version 3.9 or higher: `python3 --version`
+
+(5) Ensure your version of `pip` (the package installer for python) works with python 3.9 or higher: `pip --version` or `pip3 --version`
+
+(6) If your version of `pip` is not for python 3.9 or higher but you *do* have `pip3` and it *is* for python 3.9 or higher, replace `pip` with `pip3` in all of the following instructions
+
+(7) Install the non-lightning dependencies: `pip install requests stem flask`
+
+(8) Create an lnd virtual environment: `virtualenv lnd`
+
+(9) Activate your virtual environment: `source lnd/bin/activate`
+
+(10) Install some of the lightning dependencies: `pip install grpcio grpcio-tools googleapis-common-protos`
+
+(11) Clone the google api dependency: `git clone https://github.com/googleapis/googleapis.git`
+
+(12) Clone the lightning.proto file: `curl -o lightning.proto -s https://raw.githubusercontent.com/lightningnetwork/lnd/master/lnrpc/lightning.proto`
+
+(13) Compile the lightning.proto file: `python -m grpc_tools.protoc --proto_path=googleapis:. --python_out=. --grpc_python_out=. lightning.proto`
+
+(14) Clone the router.proto file: `curl -o router.proto -s https://raw.githubusercontent.com/lightningnetwork/lnd/master/lnrpc/routerrpc/router.proto`
+
+(15) Compile the router.proto file: `python -m grpc_tools.protoc --proto_path=googleapis:. --python_out=. --grpc_python_out=. router.proto`
+
+(16) Clone the invoices.proto file: `curl -o invoices.proto -s https://raw.githubusercontent.com/lightningnetwork/lnd/master/lnrpc/invoicesrpc/invoices.proto`
+
+(17) Compile the invoices.proto file: `python -m grpc_tools.protoc --proto_path=googleapis:. --python_out=. --grpc_python_out=. invoices.prot`
+
+(18) Run hodl contracts: `python3 hodlcontracts.py`
+
+(19) Open your browser to the admin page: `http://127.0.0.1:5000/admin/`
+
+(20) That's it! It should work from there as displayed in the video. Please raise an issue if it doesn't work for you
