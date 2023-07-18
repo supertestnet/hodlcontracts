@@ -1,5 +1,5 @@
-import rpc_pb2 as ln
-import rpc_pb2_grpc as lnrpc
+import lightning_pb2 as ln
+import lightning_pb2_grpc as lnrpc
 import invoices_pb2 as invoicesrpc
 import invoices_pb2_grpc as invoicesstub
 import router_pb2 as routerrpc
@@ -588,6 +588,33 @@ def contractpage():
 
 @app.route( '/admin/', methods=[ 'POST', 'GET' ] )
 def adminpage():
+    con = sqlite3.connect( "contracts.db" )
+    cur = con.cursor()
+    cur.execute( """CREATE TABLE IF NOT EXISTS contracts (
+                contract text,
+                contract_id text,
+                contract_name text,
+                description text,
+                first_party_role text,
+                first_party_amount integer,
+                first_party_original text,
+                first_party_hodl text,
+                first_party_pmthash text,
+                second_party_role text,
+                second_party_amount text,
+                second_party_original text,
+                second_party_hodl text,
+                second_party_pmthash text,
+                settlement_date integer,
+                automatic integer,
+                btc_price integer,
+                usdt_amount integer,
+                usdt_address text,
+                private integer,
+                oracle_fee integer
+                )""" )
+    con.commit()
+    con.close()
     contract_id = makeHash()
     con = sqlite3.connect( "contracts.db" )
     cur = con.cursor()
