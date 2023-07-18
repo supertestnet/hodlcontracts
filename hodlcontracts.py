@@ -356,7 +356,7 @@ def contractpage():
             returnable = """
                 <body style="margin: 0px; font-family: Helvetica, sans-serif;">
                         <div id="header" style="height: 50px; background-color: red;">
-                                <h1 style="padding: 7px; color: white;">
+                                <h1 style="padding: 7px; color: white; margin: 0;">
                                         Hodl contracts
                                 </h1>
                         </div>
@@ -411,7 +411,7 @@ def contractpage():
             returnable = """
                 <body style="margin: 0px; font-family: Helvetica, sans-serif;">
                         <div id="header" style="height: 50px; background-color: red;">
-                                <h1 style="padding: 7px; color: white;">
+                                <h1 style="padding: 7px; color: white; margin: 0;">
                                         Hodl contracts
                                 </h1>
                         </div>
@@ -630,7 +630,7 @@ def adminpage():
     returnable = """
                 <body style="margin: 0px; font-family: Helvetica, sans-serif;">
                         <div id="header" style="height: 50px; background-color: red;">
-                                <h1 style="padding: 7px; color: white;">
+                                <h1 style="padding: 7px; color: white; margin: 0;">
                                         Hodl Contracts
                                 </h1>
                         </div>
@@ -878,7 +878,7 @@ def extractor():
             returnable = """
                 <body style="margin: 0px; font-family: Helvetica, sans-serif;">
                         <div id="header" style="height: 50px; background-color: red;">
-                                <h1 style="padding: 7px; color: white;">
+                                <h1 style="padding: 7px; color: white; margin: 0;">
                                         Hodl contracts
                                 </h1>
                         </div>
@@ -928,7 +928,7 @@ def extractor():
                 <body style="margin: 0px; font-family: Helvetica, sans-serif;">
                         <script src="{qrcodejsfile}"></script>
                         <div id="header" style="height: 50px; background-color: red;">
-                                <h1 style="padding: 7px; color: white;">
+                                <h1 style="padding: 7px; color: white; margin: 0;">
                                         Hodl contracts
                                 </h1>
                         </div>
@@ -1171,7 +1171,7 @@ def extractor():
             returnable = """
                 <body style="margin: 0px; font-family: Helvetica, sans-serif;">
                         <div id="header" style="height: 50px; background-color: red;">
-                                <h1 style="padding: 7px; color: white;">
+                                <h1 style="padding: 7px; color: white; margin: 0;">
                                         Hodl contracts
                                 </h1>
                         </div>
@@ -1221,7 +1221,7 @@ def extractor():
                 <body style="margin: 0px; font-family: Helvetica, sans-serif;">
                         <script src="{qrcodejsfile}"></script>
                         <div id="header" style="height: 50px; background-color: red;">
-                                <h1 style="padding: 7px; color: white;">
+                                <h1 style="padding: 7px; color: white; margin: 0;">
                                         Hodl contracts
                                 </h1>
                         </div>
