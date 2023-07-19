@@ -354,39 +354,44 @@ def contractpage():
             con.close()
             fullcontract = json.dumps( contracts )
             returnable = """
-                <body style="margin: 0px; font-family: Helvetica, sans-serif;">
-                        <div id="header" style="height: 50px; background-color: red;">
-                                <h1 style="padding: 7px; color: white; margin: 0;">
-                                        Hodl contracts
-                                </h1>
+                <!DOCTYPE html>
+                <html style="min-height: 100%;">
+                <head>
+                    <style>
+                        * {{
+                            box-sizing: border-box;
+                        }}
+                    </style>
+                </head>
+                <body style="height: 100%; margin: 0px; font-family: Helvetica, sans-serif;">
+                    <div id="header" style="height: 50px; background-color: red;">
+                        <h1 style="padding: 7px; color: white; margin: 0;">
+                            Hodl contracts
+                        </h1>
+                    </div>
+                    <div style="display: flex;">
+                        <div id="leftside" style="min-height: calc( 100vh - 50px ); background-color: orange; width: 25%;">
                         </div>
-                        <div id="leftside" style="position: absolute; left: 0px; top: 50px; background-color: orange; width: 25%; height: 100%;">
+                        <div id="middle" style="width: 50%; padding: 0 0.5rem;">
+                            <div>
+                                <h2>
+                                    Contract {contract_id_short}
+                                </h2>
+                                <p>
+            					   Your submission is being processed. If you are not redirected shortly, <a href="/contract/?id={contract_id}">click here</a>
+            					</p>
+                            </div>
                         </div>
-                        <div id="middle" style="width: 50%; margin: auto;">
-                                <div style="margin: 10px;">
-                                        <h2>
-                                                Contract {contract_id_short}
-                                        </h2>
-                                        <p>
-						Your submission is being processed. If you are not redirected shortly, <a href="/contract/?id={contract_id}">click here</a>
-					</p>
-                                </div>
+                        <div id="rightside" style="background-color: blue; width: 25%;">
+                            <div style="margin: 10px; color: white;">
+                            </div>
                         </div>
-                        <div id="rightside" style="position: absolute; right: 0px; top: 50px; background-color: blue; width: 25%; height: 100%;">
-                                <div style="margin: 10px; color: white;">
-                                </div>
-                        </div>
-                        <script>
-                                function longBars() {{
-                                        document.getElementById( "leftside" ).style.height = document.getElementById( "all contracts" ).offsetHeight + "px";
-                                        document.getElementById( "rightside" ).style.height = document.getElementById( "all contracts" ).offsetHeight + "px";
-                                }}
-                                longBars();
-                        </script>
-                        <script>
-				setTimeout( function() {{ window.location.href = "/contract/?id={contract_id}" }}, 2500 );
-                        </script>
-                </div>
+                    </div>
+                    <script>
+				        setTimeout( function() {{ window.location.href = "/contract/?id={contract_id}" }}, 2500 );
+                    </script>
+                </body>
+                </html>
             """.format( contract_id_short = contract_id[ 0:10 ] + "...", contract_id = contract_id, fullcontract = fullcontract )
     else:
         if request.args.get( "id" ) is not None:
@@ -409,180 +414,183 @@ def contractpage():
             second_party_amount = str( datum[ "second party amount" ] )
             contract = json.dumps( datum )
             returnable = """
-                <body style="margin: 0px; font-family: Helvetica, sans-serif;">
-                        <div id="header" style="height: 50px; background-color: red;">
-                                <h1 style="padding: 7px; color: white; margin: 0;">
-                                        Hodl contracts
-                                </h1>
+                <!DOCTYPE html>
+                <html style="min-height: 100%;">
+                <head>
+                    <style>
+                        * {{
+                            box-sizing: border-box;
+                        }}
+                    </style>
+                </head>
+                <body style="height: 100%; margin: 0px; font-family: Helvetica, sans-serif;">
+                    <div id="header" style="height: 50px; background-color: red;">
+                        <h1 style="padding: 7px; color: white; margin: 0;">
+                            Hodl contracts
+                        </h1>
+                    </div>
+                    <div style="display: flex;">
+                        <div id="leftside" style="min-height: calc( 100vh - 50px ); background-color: orange; width: 25%;">
+                            <div style="margin: 10px;">
+                                <h2>
+                                    All contracts
+                                </h2>
+            					<p id="all contracts">
+            					</p>
+                            </div>
                         </div>
-                        <div id="leftside" style="position: absolute; left: 0px; top: 50px; background-color: orange; width: 25%; height: 100%;">
-                                <div style="margin: 10px;">
-                                        <h2>
-                                                All contracts
-                                        </h2>
-					<p id="all contracts">
-					</p>
+                        <div id="middle" style="width: 50%; padding: 0 0.5rem;">
+                            <div>
+                                <h2>
+                                    Contract {contract_id_short}
+                                </h2>
+                                <div align="center">
+                                    <div id="1st party" style="display: inline-block; margin-left: 20px; margin-right: 20px;">
+            							<p style="font-weight: bold; margin-bottom: 20px;">First party</p>
+            							<p><span style="text-decoration: underline;">Status</span>: <span id="1status"></span></p>
+                                        <a id="1st party settlement" target="_blank">
+								            <button type="button" id="first party settle button" style="color: white; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: not-allowed; margin-bottom: 20px; background-color: green; opacity: 0.3">
+                                                Settle
+								            </button>
+                                        </a>
+                                        <br>
+                                        <a id="1st party cancelation" target="_blank">
+            								<button type="button" id="first party cancel button" style="color: white; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: not-allowed; margin-bottom: 20px; background-color: red; opacity: 0.3">
+			             						Cancel
+								            </button>
+                                        </a>
+                                    </div>
+            						<div id="2nd party" style="display: inline-block; margin-left: 20px; margin-right: 20px;">
+            							<p style="font-weight: bold; margin-bottom: 20px;">Second party</p>
+            							<p><span style="text-decoration: underline;">Status</span>: <span id="2status"></span></p>
+                                        <a id="2nd party settlement" target="_blank">
+            								<button type="button" id="second party settle button" style="color: white; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: not-allowed; margin-bottom: 20px; background-color: green; opacity: 0.3">
+            									Settle
+            								</button>
+            							</a>
+            							<br>
+                                        <a id="2nd party cancelation" target="_blank">
+            								<button type="button" id="second party cancel button" style="color: white; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: not-allowed; margin-bottom: 20px; background-color: red; opacity: 0.3">
+            									Cancel
+            								</button>
+            							</a>
+            						</div>
                                 </div>
+                                <p id="description"></p>
+            					<p>
+            						Please send each counterparty a link to their page
+            					</p>
+                                <p align="center">
+                                    <a id="1st party link" target="_blank"><button type="button" style="border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer;">1st party's page</button></a>
+                                    <a id="2nd party link" target="_blank"><button type="button" style="border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer;">2nd party's page</button></a>
+                                </p>
+                            </div>
                         </div>
-                        <div id="middle" style="width: 50%; margin: auto;">
-                                <div style="margin: 10px;">
-                                        <h2>
-                                                Contract {contract_id_short}
-                                        </h2>
-                                        <div align="center">
-						<div id="1st party" style="display: inline-block; margin-left: 20px; margin-right: 20px;">
-							<p style="font-weight: bold; margin-bottom: 20px;">First party</p>
-							<p><span style="text-decoration: underline;">Status</span>: <span id="1status"></span></p>
-	                                                <a id="1st party settlement" target="_blank">
-								<button type="button" id="first party settle button" style="color: white; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: not-allowed; margin-bottom: 20px; background-color: green; opacity: 0.3">
-									Settle
-								</button>
-							</a>
-							<br>
-	                                                <a id="1st party cancelation" target="_blank">
-								<button type="button" id="first party cancel button" style="color: white; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: not-allowed; margin-bottom: 20px; background-color: red; opacity: 0.3">
-									Cancel
-								</button>
-							</a>
-						</div>
-						<div id="2nd party" style="display: inline-block; margin-left: 20px; margin-right: 20px;">
-							<p style="font-weight: bold; margin-bottom: 20px;">Second party</p>
-							<p><span style="text-decoration: underline;">Status</span>: <span id="2status"></span></p>
-	                                                <a id="2nd party settlement" target="_blank">
-								<button type="button" id="second party settle button" style="color: white; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: not-allowed; margin-bottom: 20px; background-color: green; opacity: 0.3">
-									Settle
-								</button>
-							</a>
-							<br>
-	                                                <a id="2nd party cancelation" target="_blank">
-								<button type="button" id="second party cancel button" style="color: white; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: not-allowed; margin-bottom: 20px; background-color: red; opacity: 0.3">
-									Cancel
-								</button>
-							</a>
-						</div>
-                                        </div>
-                                        <p id="description">
-					</p>
-					<p>
-						Please send each counterparty a link to their page
-					</p>
-                                        <p align="center">
-                                                <a id="1st party link" target="_blank"><button type="button" style="border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer;">1st party's page</button></a>
-                                                <a id="2nd party link" target="_blank"><button type="button" style="border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer;">2nd party's page</button></a>
-                                        </p>
+                        <div id="rightside" style="background-color: blue; width: 25%;">
+                            <div style="margin: 10px; color: white;">
+                                <h2>
+                                    New contract
+                                </h2>
+                                <div id="new contract" class="sidebarbtn" style="border: 2px solid white; border-radius: 5px; font-size: 18px; margin-bottom: 20px; cursor: pointer; text-align: center; padding: 0.5rem 0;">
+                                    Create new contract
                                 </div>
+                            </div>
                         </div>
-                        <div id="rightside" style="position: absolute; right: 0px; top: 50px; background-color: blue; width: 25%; height: 100%;">
-                                <div style="margin: 10px; color: white;">
-                                        <h2>
-                                                New contract
-                                        </h2>
-                                        <div id="new contract" class="sidebarbtn" style="border: 2px solid white; border-radius: 5px; height: 40px; font-size: 18px; line-height: 40px; margin-bottom: 20px; cursor: pointer; text-align: center;">
-                                                Create new contract
-                                        </div>
-                                </div>
-                        </div>
-                        <script>
-                                function longBars() {{
-                                        document.getElementById( "leftside" ).style.height = document.getElementById( "all contracts" ).offsetHeight + "px";
-                                        document.getElementById( "rightside" ).style.height = document.getElementById( "all contracts" ).offsetHeight + "px";
-                                }}
-                                longBars();
-                        </script>
-                        <script>
-                                document.getElementById( "new contract" ).addEventListener( "click", function() {{
-                                        window.location.href = "/admin/";
-                                }});
-                        </script>
-			<script>
-                                function makeCBox( name, date, id ) {{
-                                        div = '<a href="/contract/?id=' + id + '" style="text-decoration: none;"><div class="cbox" style="padding: 10px; background-color: white; border-radius: 10px; box-shadow: black 2px 2px 5px; margin-bottom: 10px; color: black;"><div class="clight" align="right" style="color: #4fd83a;">&#9673;</div><div class="cname">' + name + '</div><div class="sdate" style="font-size: 14px; font-style: italic; margin-top: 5px;" align="right">' + date + '</div></div></a>';
-                                        return div;
-                                }}
-				var allcontracts = {allcontracts};
-				allcontracts.reverse();
-                                allcontracts.forEach( function( item ) {{
-					document.getElementById( "all contracts" ).innerHTML += makeCBox( item[ "contract name" ], item[ "settlement date" ], item[ "contract id" ] );
-				}});
-                                longBars();
-			</script>
-                        <script>
-				function checkStatus( party ) {{
-					var xhttp = new XMLHttpRequest();
-					xhttp.onreadystatechange = function() {{
-						if ( this.readyState == 4 && this.status == 200 ) {{
-							document.getElementById( party + "status" ).innerText = xhttp.responseText;
-							if ( party == 1 ) {{
-								if ( xhttp.responseText == "Waiting on other party" ) {{
-		                                			document.getElementById( "1st party settlement" ).removeAttribute( "href" );
-									document.getElementById( "first party settle button" ).style.cursor = "not-allowed";
-									document.getElementById( "first party settle button" ).style.opacity = "0.3";
-		                                			document.getElementById( "1st party cancelation" ).href = "/cancel/?id=" + json[ "contract id" ] + "&party=1";
-									document.getElementById( "first party cancel button" ).style.cursor = "pointer";
-									document.getElementById( "first party cancel button" ).style.opacity = 1;
-								}} else if ( xhttp.responseText == "Contract funded, awaiting settlement" ) {{
-		                                			document.getElementById( "1st party settlement" ).href = "/settle/?id=" + json[ "contract id" ] + "&true=1";
-									document.getElementById( "first party settle button" ).style.cursor = "pointer";
-									document.getElementById( "first party settle button" ).style.opacity = 1;
-		                                			document.getElementById( "1st party cancelation" ).href = "/cancel/?id=" + json[ "contract id" ] + "&party=1";
-									document.getElementById( "first party cancel button" ).style.cursor = "pointer";
-									document.getElementById( "first party cancel button" ).style.opacity = 1;
-								}} else {{
-		                                			document.getElementById( "1st party settlement" ).removeAttribute( "href" );
-									document.getElementById( "first party settle button" ).style.cursor = "not-allowed";
-									document.getElementById( "first party settle button" ).style.opacity = "0.3";
-		                                			document.getElementById( "1st party cancelation" ).removeAttribute( "href" );
-									document.getElementById( "first party cancel button" ).style.cursor = "not-allowed";
-									document.getElementById( "first party cancel button" ).style.opacity = "0.3";
-								}}
-							}}
-							if ( party == 2 ) {{
-								if ( xhttp.responseText == "Waiting on other party" ) {{
-                		        			        document.getElementById( "2nd party settlement" ).removeAttribute( "href" );
-									document.getElementById( "second party settle button" ).style.cursor = "not-allowed";
-									document.getElementById( "second party settle button" ).style.opacity = "0.3";
-					                                document.getElementById( "2nd party cancelation" ).href = "/cancel/?id=" + json[ "contract id" ] + "&party=2";
-									document.getElementById( "second party cancel button" ).style.cursor = "pointer";
-									document.getElementById( "second party cancel button" ).style.opacity = 1;
-								}} else if ( xhttp.responseText == "Contract funded, awaiting settlement" ) {{
-                		        			        document.getElementById( "2nd party settlement" ).href = "/settle/?id=" + json[ "contract id" ] + "&true=0";
-									document.getElementById( "second party settle button" ).style.cursor = "pointer";
-									document.getElementById( "second party settle button" ).style.opacity = 1;
-					                                document.getElementById( "2nd party cancelation" ).href = "/cancel/?id=" + json[ "contract id" ] + "&party=2";
-									document.getElementById( "second party cancel button" ).style.cursor = "pointer";
-									document.getElementById( "second party cancel button" ).style.opacity = 1;
-								}} else {{
-                		        			        document.getElementById( "2nd party settlement" ).removeAttribute( "href" );
-									document.getElementById( "second party settle button" ).style.cursor = "not-allowed";
-									document.getElementById( "second party settle button" ).style.opacity = "0.3";
-					                                document.getElementById( "2nd party cancelation" ).removeAttribute( "href" );
-									document.getElementById( "second party cancel button" ).style.cursor = "not-allowed";
-									document.getElementById( "second party cancel button" ).style.opacity = "0.3";
-								}}
-							}}
-							console.log( "first party amount: {fpamt}" );
-							console.log( "second party amount: {spamt}" );
-						}}
-					}}
-					xhttp.open( "GET", "/checkstatus/?id={contract_id}&party=" + party, true );
-					xhttp.send();
-				}}
-				function loopStatus( party ) {{
-					checkStatus( party );
-					if ( document.getElementById( party + "status" ).innerText != "Canceled" && document.getElementById( party + "status" ).innerText != "Settled" ) {{
-						setTimeout( function() {{ loopStatus( party ); }}, 5000 );
-					}}
-				}}
-				loopStatus( 1 );
-				loopStatus( 2 );
-                        </script>
-                        <script>
-                                json = {contract};
-                                document.getElementById( "description" ).innerText = json[ "description" ];
-                                document.getElementById( "1st party link" ).href = "/?id=" + json[ "contract id" ] + "&party=1";
-                                document.getElementById( "2nd party link" ).href = "/?id=" + json[ "contract id" ] + "&party=2";
-                        </script>
-                </div>
+                    </div>
+                    <script>
+                        document.getElementById( "new contract" ).addEventListener( "click", function() {{
+                            window.location.href = "/admin/";
+                        }});
+                    </script>
+                    <script>
+                        function makeCBox( name, date, id ) {{
+                            var div = '<a href="/contract/?id=' + id + '" style="text-decoration: none;"><div class="cbox" style="padding: 10px; background-color: white; border-radius: 10px; box-shadow: black 2px 2px 5px; margin-bottom: 10px; color: black;"><div class="clight" align="right" style="color: #4fd83a;">&#9673;</div><div class="cname">' + name + '</div><div class="sdate" style="font-size: 14px; font-style: italic; margin-top: 5px;" align="right">' + date + '</div></div></a>';
+                            return div;
+                        }}
+        				var allcontracts = {allcontracts};
+        				allcontracts.reverse();
+                        allcontracts.forEach( function( item ) {{
+        					document.getElementById( "all contracts" ).innerHTML += makeCBox( item[ "contract name" ], item[ "settlement date" ], item[ "contract id" ] );
+        				}});
+                    </script>
+                    <script>
+        				function checkStatus( party ) {{
+        					var xhttp = new XMLHttpRequest();
+        					xhttp.onreadystatechange = function() {{
+        						if ( this.readyState == 4 && this.status == 200 ) {{
+        							document.getElementById( party + "status" ).innerText = xhttp.responseText;
+        							if ( party == 1 ) {{
+        								if ( xhttp.responseText == "Waiting on other party" ) {{
+                                            document.getElementById( "1st party settlement" ).removeAttribute( "href" );
+        									document.getElementById( "first party settle button" ).style.cursor = "not-allowed";
+        									document.getElementById( "first party settle button" ).style.opacity = "0.3";
+                                            document.getElementById( "1st party cancelation" ).href = "/cancel/?id=" + json[ "contract id" ] + "&party=1";
+        									document.getElementById( "first party cancel button" ).style.cursor = "pointer";
+        									document.getElementById( "first party cancel button" ).style.opacity = 1;
+        								}} else if ( xhttp.responseText == "Contract funded, awaiting settlement" ) {{
+                                            document.getElementById( "1st party settlement" ).href = "/settle/?id=" + json[ "contract id" ] + "&true=1";
+        									document.getElementById( "first party settle button" ).style.cursor = "pointer";
+        									document.getElementById( "first party settle button" ).style.opacity = 1;
+                                            document.getElementById( "1st party cancelation" ).href = "/cancel/?id=" + json[ "contract id" ] + "&party=1";
+        									document.getElementById( "first party cancel button" ).style.cursor = "pointer";
+        									document.getElementById( "first party cancel button" ).style.opacity = 1;
+        								}} else {{
+                                            document.getElementById( "1st party settlement" ).removeAttribute( "href" );
+        									document.getElementById( "first party settle button" ).style.cursor = "not-allowed";
+        									document.getElementById( "first party settle button" ).style.opacity = "0.3";
+                                            document.getElementById( "1st party cancelation" ).removeAttribute( "href" );
+        									document.getElementById( "first party cancel button" ).style.cursor = "not-allowed";
+        									document.getElementById( "first party cancel button" ).style.opacity = "0.3";
+        								}}
+        							}}
+        							if ( party == 2 ) {{
+        								if ( xhttp.responseText == "Waiting on other party" ) {{
+                                            document.getElementById( "2nd party settlement" ).removeAttribute( "href" );
+        									document.getElementById( "second party settle button" ).style.cursor = "not-allowed";
+        									document.getElementById( "second party settle button" ).style.opacity = "0.3";
+                                            document.getElementById( "2nd party cancelation" ).href = "/cancel/?id=" + json[ "contract id" ] + "&party=2";
+        									document.getElementById( "second party cancel button" ).style.cursor = "pointer";
+        									document.getElementById( "second party cancel button" ).style.opacity = 1;
+        								}} else if ( xhttp.responseText == "Contract funded, awaiting settlement" ) {{
+                                            document.getElementById( "2nd party settlement" ).href = "/settle/?id=" + json[ "contract id" ] + "&true=0";
+        									document.getElementById( "second party settle button" ).style.cursor = "pointer";
+        									document.getElementById( "second party settle button" ).style.opacity = 1;
+                                            document.getElementById( "2nd party cancelation" ).href = "/cancel/?id=" + json[ "contract id" ] + "&party=2";
+        									document.getElementById( "second party cancel button" ).style.cursor = "pointer";
+        									document.getElementById( "second party cancel button" ).style.opacity = 1;
+        								}} else {{
+                        		        	document.getElementById( "2nd party settlement" ).removeAttribute( "href" );
+        									document.getElementById( "second party settle button" ).style.cursor = "not-allowed";
+        									document.getElementById( "second party settle button" ).style.opacity = "0.3";
+                                            document.getElementById( "2nd party cancelation" ).removeAttribute( "href" );
+        									document.getElementById( "second party cancel button" ).style.cursor = "not-allowed";
+        									document.getElementById( "second party cancel button" ).style.opacity = "0.3";
+        								}}
+        							}}
+        							console.log( "first party amount: {fpamt}" );
+        							console.log( "second party amount: {spamt}" );
+        						}}
+        					}}
+        					xhttp.open( "GET", "/checkstatus/?id={contract_id}&party=" + party, true );
+        					xhttp.send();
+        				}}
+        				function loopStatus( party ) {{
+        					checkStatus( party );
+        					if ( document.getElementById( party + "status" ).innerText != "Canceled" && document.getElementById( party + "status" ).innerText != "Settled" ) {{
+        						setTimeout( function() {{ loopStatus( party ); }}, 5000 );
+        					}}
+        				}}
+        				loopStatus( 1 );
+        				loopStatus( 2 );
+                    </script>
+                    <script>
+                        json = {contract};
+                        document.getElementById( "description" ).innerText = json[ "description" ];
+                        document.getElementById( "1st party link" ).href = "/?id=" + json[ "contract id" ] + "&party=1";
+                        document.getElementById( "2nd party link" ).href = "/?id=" + json[ "contract id" ] + "&party=2";
+                    </script>
+                </body>
+                </html>
             """.format( contract_id_short = contract_id[ 0:10 ] + "...", contract_id = contract_id, contract = contract, allcontracts = allcontractsstring, fpamt = first_party_amount, spamt = second_party_amount )
     return returnable
 
@@ -628,121 +636,123 @@ def adminpage():
     allcontractsstring = set
     con.close()
     returnable = """
-                <body style="margin: 0px; font-family: Helvetica, sans-serif;">
-                        <div id="header" style="height: 50px; background-color: red;">
-                                <h1 style="padding: 7px; color: white; margin: 0;">
-                                        Hodl Contracts
-                                </h1>
-                        </div>
-                        <div id="leftside" style="position: absolute; left: 0px; top: 50px; background-color: orange; width: 25%; height: 100%;">
-                                <div style="margin: 10px;">
-                                        <h2>
-                                                All contracts
-                                        </h2>
-					<p id="all contracts">
-					</p>
+        <!DOCTYPE html>
+        <html style="min-height: 100%">
+        <head>
+            <style>
+                * {{
+                    box-sizing: border-box;
+                }}
+            </style>
+        </head>
+        <body style="height: 100%; margin: 0px; font-family: Helvetica, sans-serif;">
+            <div id="header" style="height: 50px; background-color: red;">
+                    <h1 style="padding: 7px; color: white; margin: 0;">
+                            Hodl Contracts
+                    </h1>
+            </div>
+            <div style="display: flex;">
+                <div id="leftside" style="min-height: calc( 100vh - 50px ); background-color: orange; width: 25%;">
+                    <div style="margin: 10px;">
+                        <h2>
+                            All contracts
+                        </h2>
+    					<p id="all contracts"></p>
+                    </div>
+                </div>
+                <div id="middle" style="width: 50%; padding: 0 0.5rem;">
+                    <div>
+                        <h2>
+                            New contract
+                        </h2>
+                        <form method="post" action="/contract/?id={contract_id}&processing=true">
+                            <p style="font-weight: bold;">
+                                Contract name
+                            </p>
+                            <input type="text" style="width: 100%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="contract name" name="contract name">
+                            <p style="font-weight: bold;">
+                                Contract description
+                            </p>
+                            <textarea style="width: 100%; border: 2px solid black; border-radius: 5px; height: 140px; font-family: Helvetica, sans-serif; font-size: 18px;" type="text" id="description" name="description"></textarea>
+                            <p style="font-weight: bold;">
+                                Settlement date
+                            </p>
+                            <input type="date" placeholder="12/25/2020" style="width: 100%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" type="text" id="settlement date" name="settlement date">
+                            <p style="font-weight: bold;">
+                                First party's role
+                            </p>
+                            <input type="text" style="width: 100%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="first partys role" name="first partys role" placeholder="Buyer">
+                            <p style="font-weight: bold;">
+                                Second party's role
+                            </p>
+                            <input type="text" style="width: 100%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="second partys role" name="second partys role" placeholder="Seller">
+                            <p style="font-weight: bold;">
+                                How much will the first party send to the second party via bitcoin?
+                            </p>
+                            <span style="display: inline-block; width: 10px;">$</span> <input type="number" style="width: calc( 100% - 15px ); border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="first partys amount" name="first partys amount" placeholder="100.00">
+                            <p style="font-weight: bold;">
+                                How much will the second party send to the first party via bitcoin?
+                            </p>
+                            <span style="display: inline-block; width: 10px;">$</span> <input type="number" style="width: calc( 100% - 15px ); border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="second partys amount" name="second partys amount" placeholder="0.00">
+                            <p style="font-weight: bold;">
+                                Oracle fee
+                            </p>
+                            <span style="display: inline-block; width: 10px;">$</span> <input type="number" style="width: calc( 100% - 15px ); border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="oracle fee" name="oracle fee" placeholder="1.00" step="0.01">
+                            <h3 style="text-decoration: underline; cursor: pointer;" onclick="if ( this.nextElementSibling.style.display != 'none' ) {{this.nextElementSibling.style.display = 'none'; }} else {{this.nextElementSibling.style.display = 'block';}}">
+                                Advanced (only for automated oracle contracts)
+                            </h3>
+                            <div id="advanced options" style="display: none;">
+                                <div style="margin-bottom: 20px;">
+        							<p>
+        								Be aware that if you check either of these boxes your contract will execute automatically on the settlement date you specify above
+        							</p>
+                                    <input type="checkbox" id="btc price checkbox" name="btc price checkbox">
+                                    <label for="btc price checkbox">
+                                        Price condition: if bitcoin's price is above <span>$</span> <input type="number" style="width: 120px; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="btc price" name="btc price" placeholder="100000.00"> send the btc to the first party, otherwise it will be sent to the second party
+                                    </label>
                                 </div>
-                        </div>
-                        <div id="middle" style="width: 50%; margin: auto;">
-                                <div style="margin: 10px;">
-                                        <h2>
-                                                New contract
-                                        </h2>
-                                        <form method="post" action="/contract/?id={contract_id}&processing=true">
-                                                <p style="font-weight: bold;">
-                                                        Contract name
-                                                </p>
-                                                <input type="text" style="width: 100%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="contract name" name="contract name">
-                                                <p style="font-weight: bold;">
-                                                        Contract description
-                                                </p>
-                                                <textarea style="width: 100%; border: 2px solid black; border-radius: 5px; height: 140px; font-family: Helvetica, sans-serif; font-size: 18px;" type="text" id="description" name="description"></textarea>
-                                                <p style="font-weight: bold;">
-                                                        Settlement date
-                                                </p>
-                                                <input type="date" placeholder="12/25/2020" style="width: 100%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" type="text" id="settlement date" name="settlement date">
-                                                <p style="font-weight: bold;">
-                                                        First party's role
-                                                </p>
-                                                <input type="text" style="width: 100%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="first partys role" name="first partys role" placeholder="Buyer">
-                                                <p style="font-weight: bold;">
-                                                        Second party's role
-                                                </p>
-                                                <input type="text" style="width: 100%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="second partys role" name="second partys role" placeholder="Seller">
-                                                <p style="font-weight: bold;">
-                                                        How much will the first party send to the second party via bitcoin?
-                                                </p>
-                                                <span>$</span> <input type="number" style="width: 90%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="first partys amount" name="first partys amount" placeholder="100.00">
-                                                <p style="font-weight: bold;">
-                                                        How much will the second party send to the first party via bitcoin?
-                                                </p>
-                                                <span>$</span> <input type="number" style="width: 90%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="second partys amount" name="second partys amount" placeholder="0.00">
-                                                <p style="font-weight: bold;">
-                                                        Oracle fee
-                                                </p>
-                                                <span>$</span> <input type="number" style="width: 90%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="oracle fee" name="oracle fee" placeholder="1.00" step="0.01">
-                                                <h3 style="text-decoration: underline; cursor: pointer;" onclick="if ( this.nextElementSibling.style.display != 'none' ) {{this.nextElementSibling.style.display = 'none'; }} else {{this.nextElementSibling.style.display = 'block';}} longBars();">
-                                                        Advanced (only for automated oracle contracts)
-                                                </h3>
-                                                <div id="advanced options" style="display: none;">
-                                                        <div style="margin-bottom: 20px;">
-								<p>
-									Be aware that if you check either of these boxes your contract will execute automatically on the settlement date you specify above
-								</p>
-                                                                <input type="checkbox" id="btc price checkbox" name="btc price checkbox">
-                                                                <label for="btc price checkbox">
-                                                                        Price condition: if bitcoin's price is above <span>$</span> <input type="number" style="width: 120px; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="btc price" name="btc price" placeholder="100000.00"> send the btc to the first party, otherwise it will be sent to the second party
-                                                                </label>
-                                                        </div>
-                                                        <div>
-                                                                <input type="checkbox" id="usdt checkbox" name="usdt checkbox">
-                                                                <label for="usdt checkbox">
-                                                                        USDT condition: if omni explorer says that an output of <span>$</span> <input type="number" style="width: 120px; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="usdt amount" name="usdt amount" placeholder="100.00"> or more USDT was in <input type="text" style="width: 120px; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="usdt address" name="usdt address" placeholder="1abc234def567ghi"> address, it will be sent to the first party, otherwise it will be sent to the second party
-                                                                </label>
-                                                        </div>
-                                                </div>
-                                                <p>
-                                                        <button type="submit" style="border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer;">Submit</button>
-                                                </p>
-                                        </form>
+                                <div>
+                                    <input type="checkbox" id="usdt checkbox" name="usdt checkbox">
+                                    <label for="usdt checkbox">
+                                        USDT condition: if omni explorer says that an output of <span>$</span> <input type="number" style="width: 120px; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="usdt amount" name="usdt amount" placeholder="100.00"> or more USDT was in <input type="text" style="width: 120px; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="usdt address" name="usdt address" placeholder="1abc234def567ghi"> address, it will be sent to the first party, otherwise it will be sent to the second party
+                                    </label>
                                 </div>
+                            </div>
+                            <p>
+                                <button type="submit" style="border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer;">Submit</button>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+                <div id="rightside" style="background-color: blue; width: 25%;">
+                    <div style="margin: 10px; color: white;">
+                        <h2>
+                            Contract templates
+                        </h2>
+                        <div id="trading template" class="sidebarbtn" style="border: 2px solid white; border-radius: 5px; font-size: 18px; margin-bottom: 20px; cursor: pointer; text-align: center; padding: 0.5rem 0;">
+                            Trading contract
                         </div>
-                        <div id="rightside" style="position: absolute; right: 0px; top: 50px; background-color: blue; width: 25%; height: 100%;">
-                                <div style="margin: 10px; color: white;">
-                                        <h2>
-                                                Contract templates
-                                        </h2>
-                                        <div id="trading template" class="sidebarbtn" style="border: 2px solid white; border-radius: 5px; height: 40px; font-size: 18px; line-height: 40px; margin-bottom: 20px; cursor: pointer; text-align: center;">
-                                                Trading contract
-                                        </div>
-                                        <div id="loan template" class="sidebarbtn" style="border: 2px solid white; border-radius: 5px; height: 40px; font-size: 18px; line-height: 40px; margin-bottom: 20px; cursor: pointer; text-align: center;">
-                                                Loan contract
-                                        </div>
-                                        <div id="betting template" class="sidebarbtn" style="border: 2px solid white; border-radius: 5px; height: 40px; font-size: 18px; line-height: 40px; margin-bottom: 20px; cursor: pointer; text-align: center;">
-                                                Betting contract
-                                        </div>
-                                </div>
+                        <div id="loan template" class="sidebarbtn" style="border: 2px solid white; border-radius: 5px; font-size: 18px; margin-bottom: 20px; cursor: pointer; text-align: center; padding: 0.5rem 0;">
+                            Loan contract
                         </div>
-                        <script>
-                                function longBars() {{
-                                        document.getElementById( "leftside" ).style.height = document.body.offsetHeight + "px";
-                                        document.getElementById( "rightside" ).style.height = document.body.offsetHeight + "px";
-                                }}
-                                longBars();
-                        </script>
-			<script>
-                                function makeCBox( name, date, id ) {{
-                                        div = '<a href="/contract/?id=' + id + '" style="text-decoration: none;"><div class="cbox" style="padding: 10px; background-color: white; border-radius: 10px; box-shadow: black 2px 2px 5px; margin-bottom: 10px; color: black;"><div class="clight" align="right" style="color: #4fd83a;">&#9673;</div><div class="cname">' + name + '</div><div class="sdate" style="font-size: 14px; font-style: italic; margin-top: 5px;" align="right">' + date + '</div></div></a>';
-                                        return div;
-                                }}
-				var allcontracts = {allcontracts};
-				allcontracts.reverse();
-                                allcontracts.forEach( function( item ) {{
-					document.getElementById( "all contracts" ).innerHTML += makeCBox( item[ "contract name" ], item[ "settlement date" ], item[ "contract id" ] );
-				}});
-                                longBars();
+                        <div id="betting template" class="sidebarbtn" style="border: 2px solid white; border-radius: 5px; font-size: 18px; margin-bottom: 20px; cursor: pointer; text-align: center; padding: 0.5rem 0;">
+                            Betting contract
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                function makeCBox( name, date, id ) {{
+                    var div = '<a href="/contract/?id=' + id + '" style="text-decoration: none;"><div class="cbox" style="padding: 10px; background-color: white; border-radius: 10px; box-shadow: black 2px 2px 5px; margin-bottom: 10px; color: black;"><div class="clight" align="right" style="color: #4fd83a;">&#9673;</div><div class="cname">' + name + '</div><div class="sdate" style="font-size: 14px; font-style: italic; margin-top: 5px;" align="right">' + date + '</div></div></a>';
+                    return div;
+                }}
+    			var allcontracts = {allcontracts};
+    			allcontracts.reverse();
+                allcontracts.forEach( function( item ) {{
+				    document.getElementById( "all contracts" ).innerHTML += makeCBox( item[ "contract name" ], item[ "settlement date" ], item[ "contract id" ] );
+    			}});
 			</script>
-                        <script>
+            <script>
 				function checkStatus( party ) {{
 					var xhttp = new XMLHttpRequest();
 					xhttp.onreadystatechange = function() {{
@@ -759,43 +769,44 @@ def adminpage():
 						setTimeout( function() {{ loopStatus( party ); }}, 5000 );
 					}}
 				}}
-                        </script>
-                        <script>
-                                document.getElementById( "trading template" ).addEventListener( "click", function() {{
-                                        document.getElementById( "contract name" ).value = "Janice trades with Joe, $100 in bitcoin for $100 in usd";
-                                        document.getElementById( "description" ).value = "The 1st party submits an invoice for $100 and hands the 2nd party $100 usd. The 2nd party pays the invoice and the oracle settles that invoice. This completes the contract in the happy case. There are two unhappy cases. If the 2nd party doesn't send the bitcoins, the contract expires on the settlement date. No one loses any money but no one is happy. If the 1st party doesn't hand over the usd, the oracle cancels the 1st party's invoice. No one loses any money but no one is happy.";
-					var d = new Date();
-                                        document.getElementById( "settlement date" ).value = d.toISOString().substr( 0, 10 );
-                                        document.getElementById( "first partys role" ).value = "Bitcoin buyer";
-                                        document.getElementById( "second partys role" ).value = "Bitcoin seller";
-                                        document.getElementById( "first partys amount" ).value = "0.00";
-                                        document.getElementById( "second partys amount" ).value = "100.00";
-                                        document.getElementById( "oracle fee" ).value = "1.00";
-                                }});
-                                document.getElementById( "loan template" ).addEventListener( "click", function() {{
-                                        document.getElementById( "contract name" ).value = "Timothy lends $100 to Olivia";
-                                        document.getElementById( "description" ).value = "The 1st party submits an invoice for $200 and hands over $100 usd. The 2nd party pays the invoice to overcollateralize his position. By the settlement date he hands back the $100 usd plus interest. The oracle cancels the 1st party's invoice. This concludes the contract in the happy case. There are several unhappy cases. If the 1st party does not submit an invoice, no one loses any money but no one is happy. If the 1st party submits an invoice and the 2nd party pays it but the 1st party doesn't hand over the usd by the settlement date, the oracle cancels the invoice. No one loses any money but no one is happy. If the 1st party does everything right but the 2nd party doesn't hand over the usd plus interest, the oracle settles the invoice and the lender uses it to cover his losses. The borrower loses money and is unhappy but he also is to blame because he did not pay his principle plus interest. If the price of bitcoin dips and the collateral is nearly not worth $100 anymore, the oracle settles the invoice. The lender keeps a bit more than $100 in btc and the borrower keeps $100 in usd. Neither one is perfectly happy but it's fair enough that many will be fine with it.";
-					var d = new Date();
-                                        document.getElementById( "settlement date" ).value = d.toISOString().substr( 0, 10 );
-                                        document.getElementById( "first partys role" ).value = "Lender";
-                                        document.getElementById( "second partys role" ).value = "Borrower";
-                                        document.getElementById( "first partys amount" ).value = "0.00";
-                                        document.getElementById( "second partys amount" ).value = "200.00";
-                                        document.getElementById( "oracle fee" ).value = "1.00";
-                                }});
-                                document.getElementById( "betting template" ).addEventListener( "click", function() {{
-                                        document.getElementById( "contract name" ).value = "The Steeltops versus the Rockets";
-                                        document.getElementById( "description" ).value = "Both parties submit an invoice for $100 and pay each other, then wait. On the settlement date, the oracle settles the winner's invoice and cancels the loser's. The loser may be unhappy but he lost fair and square.";
-					var d = new Date();
-                                        document.getElementById( "settlement date" ).value = d.toISOString().substr( 0, 10 );
-                                        document.getElementById( "first partys role" ).value = "Gambler";
-                                        document.getElementById( "second partys role" ).value = "Gambler";
-                                        document.getElementById( "first partys amount" ).value = "100.00";
-                                        document.getElementById( "second partys amount" ).value = "100.00";
-                                        document.getElementById( "oracle fee" ).value = "1.00";
-                                }});
-                        </script>
-                </body>
+            </script>
+            <script>
+                document.getElementById( "trading template" ).addEventListener( "click", function() {{
+                    document.getElementById( "contract name" ).value = "Janice trades with Joe, $100 in bitcoin for $100 in usd";
+                    document.getElementById( "description" ).value = "The 1st party submits an invoice for $100 and hands the 2nd party $100 usd. The 2nd party pays the invoice and the oracle settles that invoice. This completes the contract in the happy case. There are two unhappy cases. If the 2nd party doesn't send the bitcoins, the contract expires on the settlement date. No one loses any money but no one is happy. If the 1st party doesn't hand over the usd, the oracle cancels the 1st party's invoice. No one loses any money but no one is happy.";
+	                var d = new Date();
+                    document.getElementById( "settlement date" ).value = d.toISOString().substr( 0, 10 );
+                    document.getElementById( "first partys role" ).value = "Bitcoin buyer";
+                    document.getElementById( "second partys role" ).value = "Bitcoin seller";
+                    document.getElementById( "first partys amount" ).value = "0.00";
+                    document.getElementById( "second partys amount" ).value = "100.00";
+                    document.getElementById( "oracle fee" ).value = "1.00";
+                }});
+                document.getElementById( "loan template" ).addEventListener( "click", function() {{
+                    document.getElementById( "contract name" ).value = "Timothy lends $100 to Olivia";
+                    document.getElementById( "description" ).value = "The 1st party submits an invoice for $200 and hands over $100 usd. The 2nd party pays the invoice to overcollateralize his position. By the settlement date he hands back the $100 usd plus interest. The oracle cancels the 1st party's invoice. This concludes the contract in the happy case. There are several unhappy cases. If the 1st party does not submit an invoice, no one loses any money but no one is happy. If the 1st party submits an invoice and the 2nd party pays it but the 1st party doesn't hand over the usd by the settlement date, the oracle cancels the invoice. No one loses any money but no one is happy. If the 1st party does everything right but the 2nd party doesn't hand over the usd plus interest, the oracle settles the invoice and the lender uses it to cover his losses. The borrower loses money and is unhappy but he also is to blame because he did not pay his principle plus interest. If the price of bitcoin dips and the collateral is nearly not worth $100 anymore, the oracle settles the invoice. The lender keeps a bit more than $100 in btc and the borrower keeps $100 in usd. Neither one is perfectly happy but it's fair enough that many will be fine with it.";
+	                var d = new Date();
+                    document.getElementById( "settlement date" ).value = d.toISOString().substr( 0, 10 );
+                    document.getElementById( "first partys role" ).value = "Lender";
+                    document.getElementById( "second partys role" ).value = "Borrower";
+                    document.getElementById( "first partys amount" ).value = "0.00";
+                    document.getElementById( "second partys amount" ).value = "200.00";
+                    document.getElementById( "oracle fee" ).value = "1.00";
+                }});
+                document.getElementById( "betting template" ).addEventListener( "click", function() {{
+                    document.getElementById( "contract name" ).value = "The Steeltops versus the Rockets";
+                    document.getElementById( "description" ).value = "Both parties submit an invoice for $100 and pay each other, then wait. On the settlement date, the oracle settles the winner's invoice and cancels the loser's. The loser may be unhappy but he lost fair and square.";
+                    var d = new Date();
+                    document.getElementById( "settlement date" ).value = d.toISOString().substr( 0, 10 );
+                    document.getElementById( "first partys role" ).value = "Gambler";
+                    document.getElementById( "second partys role" ).value = "Gambler";
+                    document.getElementById( "first partys amount" ).value = "100.00";
+                    document.getElementById( "second partys amount" ).value = "100.00";
+                    document.getElementById( "oracle fee" ).value = "1.00";
+                }});
+            </script>
+        </body>
+        </html>
     """.format( contract_id_short = contract_id[ 0:10 ] + "...", contract_id=contract_id, allcontracts = allcontractsstring )
     return returnable
 
@@ -876,41 +887,45 @@ def extractor():
                        { "contract": contract, "contract_id": contract_id, "contract_name": contract_name, "description": description, "first_party_role": first_party_role, "first_party_amount": first_party_amount, "first_party_original": "", "first_party_hodl": "", "first_party_pmthash": "", "second_party_role": second_party_role, "second_party_amount": second_party_amount, "second_party_original": "", "second_party_hodl": "", "second_party_pmthash": "", "settlement_date": settlement_date, "automatic": automatic, "btc_price": btc_price, "usdt_amount": usdt_amount, "usdt_address": usdt_address, "private": 0, "oracle_fee": oracle_fee } )
             con.commit()
             returnable = """
-                <body style="margin: 0px; font-family: Helvetica, sans-serif;">
-                        <div id="header" style="height: 50px; background-color: red;">
-                                <h1 style="padding: 7px; color: white; margin: 0;">
-                                        Hodl contracts
-                                </h1>
+                <!DOCTYPE html>
+                <html style="min-height: 100%">
+                <head>
+                    <style>
+                        * {{
+                            box-sizing: border-box;
+                        }}
+                    </style>
+                </head>
+                <body style="height: 100%; margin: 0px; font-family: Helvetica, sans-serif;">
+                    <div id="header" style="height: 50px; background-color: red;">
+                        <h1 style="padding: 7px; color: white; margin: 0;">
+                            Hodl contracts
+                        </h1>
+                    </div>
+                    <div style="display: flex;">
+                        <div id="leftside" style="min-height: calc( 100vh - 50px ); background-color: orange; width: 25%;">
                         </div>
-                        <div id="leftside" style="position: absolute; left: 0px; top: 50px; background-color: orange; width: 25%; height: 100%;">
+                        <div id="middle" style="width: 50%; padding: 0 0.5rem;">
+                            <div>
+                                <h2>
+                                    Contract {contract_id_short}
+                                </h2>
+                                <p>
+            					   Your submission is being processed. If you are not redirected shortly, <a href="/?id={contract_id}&party={party}">click here</a>
+            					</p>
+                            </div>
                         </div>
-                        <div id="middle" style="width: 50%; margin: auto;">
-                                <div style="margin: 10px;">
-                                        <h2>
-                                                Contract {contract_id_short}
-                                        </h2>
-                                        <p>
-						Your submission is being processed. If you are not redirected shortly, <a href="/?id={contract_id}&party={party}">click here</a>
-					</p>
-                                </div>
+                        <div id="rightside" style="background-color: blue; width: 25%;">
+                            <div style="margin: 10px; color: white;"></div>
                         </div>
-                        <div id="rightside" style="position: absolute; right: 0px; top: 50px; background-color: blue; width: 25%; height: 100%;">
-                                <div style="margin: 10px; color: white;">
-                                </div>
-                        </div>
-                        <script>
-                                function longBars() {{
-                                        document.getElementById( "leftside" ).style.height = document.body.offsetHeight + "px";
-                                        document.getElementById( "rightside" ).style.height = document.body.offsetHeight + "px";
-                                }}
-                                longBars();
-                        </script>
-                        <script>
-				setTimeout( function() {{ window.location.href = "/?id={contract_id}&party={party}" }}, 2500 );
-                        </script>
-                </div>
-        """.format( contract_id_short = contract_id[ 0:10 ] + "...", contract_id = contract_id, party = str( request.args.get( "party" ) ) )
-        return returnable
+                    </div>
+                    <script>
+			            setTimeout( function() {{ window.location.href = "/?id={contract_id}&party={party}" }}, 2500 );
+                    </script>
+                </body>
+                </html>
+            """.format( contract_id_short = contract_id[ 0:10 ] + "...", contract_id = contract_id, party = str( request.args.get( "party" ) ) )
+            return returnable
     if request.args.get( "party" ) == "1" and request.args.get( "id" ) is not None and request.args.get( "processing" ) is None:
         contract_id = request.args.get( "id" )
         con = sqlite3.connect( "contracts.db" )
@@ -925,185 +940,189 @@ def extractor():
         p1amt = str( datum[ "first party amount" ] )
         p2amt = str( datum[ "second party amount" ] )
         returnable = """
-                <body style="margin: 0px; font-family: Helvetica, sans-serif;">
-                        <script src="{qrcodejsfile}"></script>
-                        <div id="header" style="height: 50px; background-color: red;">
-                                <h1 style="padding: 7px; color: white; margin: 0;">
-                                        Hodl contracts
-                                </h1>
-                        </div>
-                        <div id="leftside" style="position: absolute; left: 0px; top: 50px; background-color: orange; width: 25%; height: 100%;">
-                        </div>
-                        <div id="middle" style="width: 50%; margin: auto;">
-                                <div style="margin: 10px;">
-                                        <h2>
-                                                Contract {contract_id_short}
-                                        </h2>
-                                        <p id="description">
-					</p>
-					<form method="post" action="/?processing=true&id={contract_id}&party={party}" style="display: none;">
-                                                <p>
-                                                        Enter an invoice <span id="invoice amount"></span>
-                                                </p>
-						<p>
-	                                                <input type="text" style="width: 100%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="invoice" name="invoice" placeholder="lnbc1482n0jf9t0wasfjfas9f20fj0fa0...">
-						</p>
-						<p>
-	                                                <button type="submit" style="border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer;">Submit</button>
-						</p>
-					</form>
-					<div id="invoice container" style="display: none;">
-						Deposit funds to this smart contract<br>
-						<a href="lightning:{spinvoice}">
-							<div id="invoice div" style="max-width: 300px; margin: auto;">
-							</div>
-						</a>
-					</div>
-					<p id="instructions" style="display: none;">
-						<span id="instructions if invoiced" style="display: none;">You have already submitted your invoice. </span><span id="instructions if awaiting counterparty invoice" style="display: none;">Please wait while your counterparty creates an invoice. Check back later. </span><span id="instructions if awaiting counterparty deposit" style="display: none;">Please wait while your counterparty pays your invoice. Check back later. </span><span id="instructions if awaiting settlement" style="display: none;">Please await your settlement date (visible in the contract details below) and contact your oracle for more info.</span>
-					</p>
-					<p id="payment received" style="display: none;">
-						You received a payment from your counterparty
-					</p>
-					<p id="payment sent" style="display: none;">
-						Your payment to your counterparty went through
-					</p>
-					<p id="payment not received" style="display: none;">
-						The oracle canceled a payment from your counterparty to you
-					</p>
-					<p id="payment not sent" style="display: none;">
-						The oracle canceled a payment from you to your counterparty
-					</p>
-					<p id="completion message" style="display: none;">
-						This contract is complete
-					</p>
-					<p id="details button" style="text-decoration: underline; cursor: pointer;" onclick="if ( this.nextElementSibling.style.display != 'none' ) {{this.nextElementSibling.style.display = 'none'; }} else {{this.nextElementSibling.style.display = 'block';}} longBars();">
-						View contract details
-					</p>
-					<p id="details" style="display: none; white-space: pre-wrap; word-wrap: break-word;">
-					</p>
-                                </div>
-                        </div>
-                        <div id="rightside" style="position: absolute; right: 0px; top: 50px; background-color: blue; width: 25%; height: 100%;">
-                                <div style="margin: 10px; color: white;">
-                                </div>
-                        </div>
-			<script>
-				function createQR( data ) {{
-                                	var dataUriPngImage = document.createElement( "img" ),
-                                	s = QRCode.generatePNG( data, {{
-                                	        ecclevel: "M",
-                                	        format: "html",
-                                	        fillcolor: "#FFFFFF",
-                                	        textcolor: "#373737",
-                                	        margin: 4,
-                                	        modulesize: 8
-                                	}});
-                                	dataUriPngImage.src = s;
-                                	dataUriPngImage.id = "lnurl-auth-image";
-					dataUriPngImage.style = "width: 100%;";
-					return dataUriPngImage;
-                        	}}
-			</script>
-                        <script>
-				function checkStatus( party ) {{
-                                        var fpinvoice = "{fpinvoice}";
-					var spinvoice = "{spinvoice}";
-					var xhttp = new XMLHttpRequest();
-					xhttp.onreadystatechange = function() {{
-						if ( this.readyState == 4 && this.status == 200 ) {{
-							if ( party == 1 ) {{
-								if ( xhttp.responseText == "Canceled" ) {{
-									document.getElementById( "payment not received" ).style.display = "block";
-									document.getElementById( "instructions" ).style.display = "none";
-									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
-									document.getElementById( "completion message" ).style.display = "block";
-								}}
-								if ( xhttp.responseText == "Settled" ) {{
-									document.getElementById( "payment received" ).style.display = "block";
-									document.getElementById( "instructions" ).style.display = "none";
-									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
-									document.getElementById( "completion message" ).style.display = "block";
-								}}
-							}}
-	                                                if ( party == 2 ) {{
-								var p1amt = "{p1amt}";
-								if ( xhttp.responseText == "No interaction yet" ) {{
-									if ( Number( p1amt ) > 0 ) {{
-										document.getElementById( "instructions if awaiting counterparty invoice" ).style.display = "inline";
-									}} else {{
-										document.getElementById( "instructions if awaiting counterparty deposit" ).style.display = "inline";
-									}}
-									document.getElementById( "instructions if awaiting settlement" ).style.display = "none";
-								}}
-								if ( xhttp.responseText == "Waiting on other party" && fpinvoice != "" ) {{
-									document.getElementById( "instructions" ).style.display = "none";
-									document.getElementById( "invoice container" ).style.display = "block";
-									if ( !document.getElementById( "invoice div" ).innerHTML.includes( "img" ) ) {{
-										if ( spinvoice != "" ) {{
-											document.getElementById( "invoice div" ).appendChild( createQR( "{spinvoice}".toUpperCase() ) );
-										}} else {{
-											window.location.reload();
-										}}
-									}}
-								}} else {{
-									document.getElementById( "invoice container" ).style.display = "none";
-								}}
-								if ( xhttp.responseText == "Contract funded, awaiting settlement" ) {{
-									document.getElementById( "instructions if awaiting counterparty invoice" ).style.display = "none";
-									document.getElementById( "instructions if awaiting settlement" ).style.display = "inline";
-									document.getElementById( "instructions" ).style.display = "block";
-								}}
-								if ( xhttp.responseText == "Settled" ) {{
-									document.getElementById( "payment sent" ).style.display = "block";
-									document.getElementById( "instructions" ).style.display = "none";
-									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
-									document.getElementById( "completion message" ).style.display = "block";
-								}}
-								if ( xhttp.responseText == "Canceled" ) {{
-									document.getElementById( "payment not sent" ).style.display = "block";
-									document.getElementById( "instructions" ).style.display = "none";
-									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
-									document.getElementById( "completion message" ).style.display = "block";
-								}}
-							}}
-						}}
-					}}
-					xhttp.open( "GET", "/checkstatus/?id={contract_id}&party=" + party, true );
-					xhttp.send();
-				}}
-				function loopStatus( party ) {{
-					checkStatus( party );
-					if ( document.getElementById( "completion message" ).style.display != "block" ) {{
-						setTimeout( function() {{ loopStatus( party ); }}, 5000 );
-					}}
-				}}
-				loopStatus( 1 );
-				loopStatus( 2 );
-                        </script>
-                        <script>
-                                function longBars() {{
-                                        document.getElementById( "leftside" ).style.height = document.body.offsetHeight + "px";
-                                        document.getElementById( "rightside" ).style.height = document.body.offsetHeight + "px";
-                                }}
-                                longBars();
-                        </script>
-                        <script>
-                                json = {contract};
-                                document.getElementById( "description" ).innerText = json[ "description" ];
-                                document.getElementById( "details" ).innerText = JSON.stringify( json, null, 2 );
-                                document.getElementById( "invoice amount" ).innerText = "for $" + json[ "second party amount" ];
-				if ( Number( json[ "second party amount" ] ) > 0 && json[ "first party hodl invoice" ] == "" ) {{
-					document.getElementsByTagName( "form" )[ 0 ].style.display = "block";
-				}}
-                                if ( Number( json[ "second party amount" ] ) > 0 && json[ "first party hodl invoice" ] != "" ) {{
-					document.getElementById( "instructions if invoiced" ).style.display = "inline";
-				}}
-                                if ( document.getElementsByTagName( "form" )[ 0 ].style.display == "none" ) {{
-					document.getElementById( "instructions" ).style.display = "block";
-                                }}
-                        </script>
+            <!DOCTYPE html>
+            <html style="min-height: 100%">
+            <head>
+                <style>
+                    * {{
+                        box-sizing: border-box;
+                    }}
+                </style>
+            </head>
+            <body style="height: 100%; margin: 0px; font-family: Helvetica, sans-serif;">
+                <script src="{qrcodejsfile}"></script>
+                <div id="header" style="height: 50px; background-color: red;">
+                    <h1 style="padding: 7px; color: white; margin: 0;">
+                        Hodl contracts
+                    </h1>
                 </div>
+                <div style="display: flex;">
+                    <div id="leftside" style="min-height: calc( 100vh - 50px ); background-color: orange; width: 25%;">
+                    </div>
+                    <div id="middle" style="width: 50%; padding: 0 0.5rem;">
+                        <div>
+                            <h2>
+                                Contract {contract_id_short}
+                            </h2>
+                            <p id="description"></p>
+                            <form method="post" action="/?processing=true&id={contract_id}&party={party}" style="display: none;">
+                                <p>
+                                    Enter an invoice <span id="invoice amount"></span>
+                                </p>
+        						<p>
+                                    <input type="text" style="width: 100%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="invoice" name="invoice" placeholder="lnbc1482n0jf9t0wasfjfas9f20fj0fa0...">
+        						</p>
+        						<p>
+                                    <button type="submit" style="border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer;">Submit</button>
+        						</p>
+                            </form>
+        					<div id="invoice container" style="display: none;">
+        						Deposit funds to this smart contract<br>
+        						<a href="lightning:{spinvoice}">
+        							<div id="invoice div" style="max-width: 300px; margin: auto;">
+        							</div>
+        						</a>
+        					</div>
+        					<p id="instructions" style="display: none;">
+        						<span id="instructions if invoiced" style="display: none;">You have already submitted your invoice. </span><span id="instructions if awaiting counterparty invoice" style="display: none;">Please wait while your counterparty creates an invoice. Check back later. </span><span id="instructions if awaiting counterparty deposit" style="display: none;">Please wait while your counterparty pays your invoice. Check back later. </span><span id="instructions if awaiting settlement" style="display: none;">Please await your settlement date (visible in the contract details below) and contact your oracle for more info.</span>
+        					</p>
+        					<p id="payment received" style="display: none;">
+        						You received a payment from your counterparty
+        					</p>
+        					<p id="payment sent" style="display: none;">
+        						Your payment to your counterparty went through
+        					</p>
+        					<p id="payment not received" style="display: none;">
+        						The oracle canceled a payment from your counterparty to you
+        					</p>
+        					<p id="payment not sent" style="display: none;">
+        						The oracle canceled a payment from you to your counterparty
+        					</p>
+        					<p id="completion message" style="display: none;">
+        						This contract is complete
+        					</p>
+        					<p id="details button" style="text-decoration: underline; cursor: pointer;" onclick="if ( this.nextElementSibling.style.display != 'none' ) {{this.nextElementSibling.style.display = 'none'; }} else {{this.nextElementSibling.style.display = 'block';}}">
+        						View contract details
+        					</p>
+        					<p id="details" style="display: none; white-space: pre-wrap; word-wrap: break-word;">
+        					</p>
+                        </div>
+                    </div>
+                    <div id="rightside" style="background-color: blue; width: 25%;">
+                        <div style="margin: 10px; color: white;">
+                        </div>
+                    </div>
+                </div>
+    			<script>
+    				function createQR( data ) {{
+                    	var dataUriPngImage = document.createElement( "img" ),
+                    	s = QRCode.generatePNG( data, {{
+                	        ecclevel: "M",
+                	        format: "html",
+                	        fillcolor: "#FFFFFF",
+                	        textcolor: "#373737",
+                	        margin: 4,
+                	        modulesize: 8
+                    	}});
+                    	dataUriPngImage.src = s;
+                    	dataUriPngImage.id = "lnurl-auth-image";
+    					dataUriPngImage.style = "width: 100%;";
+    					return dataUriPngImage;
+                	}}
+    			</script>
+                <script>
+		            function checkStatus( party ) {{
+                        var fpinvoice = "{fpinvoice}";
+    					var spinvoice = "{spinvoice}";
+    					var xhttp = new XMLHttpRequest();
+    					xhttp.onreadystatechange = function() {{
+    						if ( this.readyState == 4 && this.status == 200 ) {{
+    							if ( party == 1 ) {{
+    								if ( xhttp.responseText == "Canceled" ) {{
+    									document.getElementById( "payment not received" ).style.display = "block";
+    									document.getElementById( "instructions" ).style.display = "none";
+    									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
+    									document.getElementById( "completion message" ).style.display = "block";
+    								}}
+    								if ( xhttp.responseText == "Settled" ) {{
+    									document.getElementById( "payment received" ).style.display = "block";
+    									document.getElementById( "instructions" ).style.display = "none";
+    									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
+    									document.getElementById( "completion message" ).style.display = "block";
+    								}}
+    							}}
+                                if ( party == 2 ) {{
+    								var p1amt = "{p1amt}";
+    								if ( xhttp.responseText == "No interaction yet" ) {{
+    									if ( Number( p1amt ) > 0 ) {{
+    										document.getElementById( "instructions if awaiting counterparty invoice" ).style.display = "inline";
+    									}} else {{
+    										document.getElementById( "instructions if awaiting counterparty deposit" ).style.display = "inline";
+    									}}
+    									document.getElementById( "instructions if awaiting settlement" ).style.display = "none";
+    								}}
+    								if ( xhttp.responseText == "Waiting on other party" && fpinvoice != "" ) {{
+    									document.getElementById( "instructions" ).style.display = "none";
+    									document.getElementById( "invoice container" ).style.display = "block";
+    									if ( !document.getElementById( "invoice div" ).innerHTML.includes( "img" ) ) {{
+    										if ( spinvoice != "" ) {{
+    											document.getElementById( "invoice div" ).appendChild( createQR( "{spinvoice}".toUpperCase() ) );
+    										}} else {{
+    											window.location.reload();
+    										}}
+    									}}
+    								}} else {{
+    									document.getElementById( "invoice container" ).style.display = "none";
+    								}}
+    								if ( xhttp.responseText == "Contract funded, awaiting settlement" ) {{
+    									document.getElementById( "instructions if awaiting counterparty invoice" ).style.display = "none";
+    									document.getElementById( "instructions if awaiting settlement" ).style.display = "inline";
+    									document.getElementById( "instructions" ).style.display = "block";
+    								}}
+    								if ( xhttp.responseText == "Settled" ) {{
+    									document.getElementById( "payment sent" ).style.display = "block";
+    									document.getElementById( "instructions" ).style.display = "none";
+    									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
+    									document.getElementById( "completion message" ).style.display = "block";
+    								}}
+    								if ( xhttp.responseText == "Canceled" ) {{
+    									document.getElementById( "payment not sent" ).style.display = "block";
+    									document.getElementById( "instructions" ).style.display = "none";
+    									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
+    									document.getElementById( "completion message" ).style.display = "block";
+    								}}
+    							}}
+    						}}
+    					}}
+    					xhttp.open( "GET", "/checkstatus/?id={contract_id}&party=" + party, true );
+    					xhttp.send();
+    				}}
+    				function loopStatus( party ) {{
+    					checkStatus( party );
+    					if ( document.getElementById( "completion message" ).style.display != "block" ) {{
+    						setTimeout( function() {{ loopStatus( party ); }}, 5000 );
+    					}}
+    				}}
+    				loopStatus( 1 );
+    				loopStatus( 2 );
+                </script>
+                <script>
+                    json = {contract};
+                    document.getElementById( "description" ).innerText = json[ "description" ];
+                    document.getElementById( "details" ).innerText = JSON.stringify( json, null, 2 );
+                    document.getElementById( "invoice amount" ).innerText = "for $" + json[ "second party amount" ];
+    				if ( Number( json[ "second party amount" ] ) > 0 && json[ "first party hodl invoice" ] == "" ) {{
+    					document.getElementsByTagName( "form" )[ 0 ].style.display = "block";
+    				}}
+                    if ( Number( json[ "second party amount" ] ) > 0 && json[ "first party hodl invoice" ] != "" ) {{
+                        document.getElementById( "instructions if invoiced" ).style.display = "inline";
+		            }}
+                    if ( document.getElementsByTagName( "form" )[ 0 ].style.display == "none" ) {{
+                        document.getElementById( "instructions" ).style.display = "block";
+                    }}
+                </script>
+            </body>
+            </html>
         """.format( contract_id_short = contract_id[ 0:10 ] + "...", contract_id = contract_id, contract = contract, party = str( request.args.get( "party" ) ), fpinvoice = fpinvoice, spinvoice = spinvoice, qrcodejsfile = url_for( "static", filename="qrcode.js" ), p1amt = p1amt, p2amt = p2amt )
         return returnable
     if request.args.get( "party" ) == "2" and request.args.get( "id" ) is not None and request.args.get( "processing" ) is not None:
@@ -1169,39 +1188,42 @@ def extractor():
                        { "contract": contract, "contract_id": contract_id, "contract_name": contract_name, "description": description, "first_party_role": first_party_role, "first_party_amount": first_party_amount, "first_party_original": "", "first_party_hodl": "", "first_party_pmthash": "", "second_party_role": second_party_role, "second_party_amount": second_party_amount, "second_party_original": "", "second_party_hodl": "", "second_party_pmthash": "", "settlement_date": settlement_date, "automatic": automatic, "btc_price": btc_price, "usdt_amount": usdt_amount, "usdt_address": usdt_address, "private": 0, "oracle_fee": oracle_fee } )
             con.commit()
             returnable = """
-                <body style="margin: 0px; font-family: Helvetica, sans-serif;">
-                        <div id="header" style="height: 50px; background-color: red;">
-                                <h1 style="padding: 7px; color: white; margin: 0;">
-                                        Hodl contracts
-                                </h1>
+                <!DOCTYPE html>
+                <html style="min-height: 100%">
+                <head>
+                    <style>
+                        * {{
+                            box-sizing: border-box;
+                        }}
+                    </style>
+                </head>
+                <body style="height: 100%; margin: 0px; font-family: Helvetica, sans-serif;">
+                    <div id="header" style="height: 50px; background-color: red;">
+                        <h1 style="padding: 7px; color: white; margin: 0;">
+                            Hodl contracts
+                        </h1>
+                    </div>
+                    <div id="leftside" style="position: absolute; left: 0px; top: 50px; background-color: orange; width: 25%; height: calc( 100vh - 50px );">
+                    </div>
+                    <div id="middle" style="width: 50%; margin: auto;">
+                        <div>
+                            <h2>
+                                Contract {contract_id_short}
+                            </h2>
+                            <p>
+        						Your submission is being processed. If you are not redirected shortly, <a href="/?id={contract_id}&party={party}">click here</a>
+        					</p>
                         </div>
-                        <div id="leftside" style="position: absolute; left: 0px; top: 50px; background-color: orange; width: 25%; height: 100%;">
+                    </div>
+                    <div id="rightside" style="position: absolute; right: 0px; top: 50px; background-color: blue; width: 25%; height: calc( 100vh - 50px );">
+                        <div style="margin: 10px; color: white;">
                         </div>
-                        <div id="middle" style="width: 50%; margin: auto;">
-                                <div style="margin: 10px;">
-                                        <h2>
-                                                Contract {contract_id_short}
-                                        </h2>
-                                        <p>
-						Your submission is being processed. If you are not redirected shortly, <a href="/?id={contract_id}&party={party}">click here</a>
-					</p>
-                                </div>
-                        </div>
-                        <div id="rightside" style="position: absolute; right: 0px; top: 50px; background-color: blue; width: 25%; height: 100%;">
-                                <div style="margin: 10px; color: white;">
-                                </div>
-                        </div>
-                        <script>
-                                function longBars() {{
-                                        document.getElementById( "leftside" ).style.height = document.body.offsetHeight + "px";
-                                        document.getElementById( "rightside" ).style.height = document.body.offsetHeight + "px";
-                                }}
-                                longBars();
-                        </script>
-                        <script>
-				setTimeout( function() {{ window.location.href = "/?id={contract_id}&party={party}" }}, 2500 );
-                        </script>
-                </div>
+                    </div>
+                    <script>
+				        setTimeout( function() {{ window.location.href = "/?id={contract_id}&party={party}" }}, 2500 );
+                    </script>
+                </body>
+                </html>
         """.format( contract_id_short = contract_id[ 0:10 ] + "...", contract_id = contract_id, party = str( request.args.get( "party" ) ) )
         return returnable
     if request.args.get( "party" ) == "2" and request.args.get( "id" ) is not None and request.args.get( "processing" ) is None:
@@ -1218,185 +1240,189 @@ def extractor():
         p1amt = str( datum[ "first party amount" ] )
         p2amt = str( datum[ "second party amount" ] )
         returnable = """
-                <body style="margin: 0px; font-family: Helvetica, sans-serif;">
-                        <script src="{qrcodejsfile}"></script>
-                        <div id="header" style="height: 50px; background-color: red;">
-                                <h1 style="padding: 7px; color: white; margin: 0;">
-                                        Hodl contracts
-                                </h1>
-                        </div>
-                        <div id="leftside" style="position: absolute; left: 0px; top: 50px; background-color: orange; width: 25%; height: 100%;">
-                        </div>
-                        <div id="middle" style="width: 50%; margin: auto;">
-                                <div style="margin: 10px;">
-                                        <h2>
-                                                Contract {contract_id_short}
-                                        </h2>
-                                        <p id="description">
-					</p>
-					<form method="post" action="/?processing=true&id={contract_id}&party={party}" style="display: none;">
-                                                <p>
-                                                        Enter an invoice <span id="invoice amount"></span>
-                                                </p>
-						<p>
-	                                                <input type="text" style="width: 100%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="invoice" name="invoice" placeholder="lnbc1482n0jf9t0wasfjfas9f20fj0fa0...">
-						</p>
-						<p>
-	                                                <button type="submit" style="border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer;">Submit</button>
-						</p>
-					</form>
-					<div id="invoice container" style="display: none;">
-						Deposit funds to this smart contract<br>
-						<a href="lightning:{fpinvoice}">
-							<div id="invoice div" style="max-width: 300px; margin: auto;">
-							</div>
-						</a>
-					</div>
-					<p id="instructions" style="display: none;">
-						<span id="instructions if invoiced" style="display: none;">You have already submitted your invoice. </span><span id="instructions if awaiting counterparty invoice" style="display: none;">Please wait while your counterparty creates an invoice. Check back later. </span><span id="instructions if awaiting counterparty deposit" style="display: none;">Please wait while your counterparty pays your invoice. Check back later. </span><span id="instructions if awaiting settlement" style="display: none;">Please await your settlement date (visible in the contract details below) and contact your oracle for more info.</span>
-					</p>
-					<p id="payment received" style="display: none;">
-						You received a payment from your counterparty
-					</p>
-					<p id="payment sent" style="display: none;">
-						Your payment to your counterparty went through
-					</p>
-					<p id="payment not received" style="display: none;">
-						The oracle canceled a payment from your counterparty to you
-					</p>
-					<p id="payment not sent" style="display: none;">
-						The oracle canceled a payment from you to your counterparty
-					</p>
-					<p id="completion message" style="display: none;">
-						This contract is complete
-					</p>
-					<p id="details button" style="text-decoration: underline; cursor: pointer;" onclick="if ( this.nextElementSibling.style.display != 'none' ) {{this.nextElementSibling.style.display = 'none'; }} else {{this.nextElementSibling.style.display = 'block';}} longBars();">
-						View contract details
-					</p>
-					<p id="details" style="display: none; white-space: pre-wrap; word-wrap: break-word;">
-					</p>
-                                </div>
-                        </div>
-                        <div id="rightside" style="position: absolute; right: 0px; top: 50px; background-color: blue; width: 25%; height: 100%;">
-                                <div style="margin: 10px; color: white;">
-                                </div>
-                        </div>
-			<script>
-				function createQR( data ) {{
-                                	var dataUriPngImage = document.createElement( "img" ),
-                                	s = QRCode.generatePNG( data, {{
-                                	        ecclevel: "M",
-                                	        format: "html",
-                                	        fillcolor: "#FFFFFF",
-                                	        textcolor: "#373737",
-                                	        margin: 4,
-                                	        modulesize: 8
-                                	}});
-                                	dataUriPngImage.src = s;
-                                	dataUriPngImage.id = "lnurl-auth-image";
-					dataUriPngImage.style = "width: 100%;";
-					return dataUriPngImage;
-                        	}}
-			</script>
-                        <script>
-				function checkStatus( party ) {{
-					var fpinvoice = "{fpinvoice}";
-                                        var spinvoice = "{spinvoice}";
-					var xhttp = new XMLHttpRequest();
-					xhttp.onreadystatechange = function() {{
-						if ( this.readyState == 4 && this.status == 200 ) {{
-							if ( party == 2 ) {{
-								if ( xhttp.responseText == "Canceled" ) {{
-									document.getElementById( "payment not received" ).style.display = "block";
-									document.getElementById( "instructions" ).style.display = "none";
-									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
-									document.getElementById( "completion message" ).style.display = "block";
-								}}
-								if ( xhttp.responseText == "Settled" ) {{
-									document.getElementById( "payment received" ).style.display = "block";
-									document.getElementById( "instructions" ).style.display = "none";
-									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
-									document.getElementById( "completion message" ).style.display = "block";
-								}}
-							}}
-	                                                if ( party == 1 ) {{
-								var p2amt = "{p2amt}";
-								if ( xhttp.responseText == "No interaction yet" ) {{
-									if ( Number( p2amt ) > 0 ) {{
-										document.getElementById( "instructions if awaiting counterparty invoice" ).style.display = "inline";
-									}} else {{
-										document.getElementById( "instructions if awaiting counterparty deposit" ).style.display = "inline";
-									}}
-									document.getElementById( "instructions if awaiting settlement" ).style.display = "none";
-								}}
-								if ( xhttp.responseText == "Waiting on other party" && spinvoice != "" ) {{
-									document.getElementById( "instructions" ).style.display = "none";
-									document.getElementById( "invoice container" ).style.display = "block";
-									if ( !document.getElementById( "invoice div" ).innerHTML.includes( "img" ) ) {{
-										if ( fpinvoice != "" ) {{
-											document.getElementById( "invoice div" ).appendChild( createQR( "{fpinvoice}".toUpperCase() ) );
-										}} else {{
-											window.location.reload();
-										}}
-									}}
-								}} else {{
-									document.getElementById( "invoice container" ).style.display = "none";
-								}}
-								if ( xhttp.responseText == "Contract funded, awaiting settlement" ) {{
-									document.getElementById( "instructions if awaiting counterparty invoice" ).style.display = "none";
-									document.getElementById( "instructions if awaiting settlement" ).style.display = "inline";
-									document.getElementById( "instructions" ).style.display = "block";
-								}}
-								if ( xhttp.responseText == "Settled" ) {{
-									document.getElementById( "payment sent" ).style.display = "block";
-									document.getElementById( "instructions" ).style.display = "none";
-									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
-									document.getElementById( "completion message" ).style.display = "block";
-								}}
-								if ( xhttp.responseText == "Canceled" ) {{
-									document.getElementById( "payment not sent" ).style.display = "block";
-									document.getElementById( "instructions" ).style.display = "none";
-									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
-									document.getElementById( "completion message" ).style.display = "block";
-								}}
-							}}
-						}}
-					}}
-					xhttp.open( "GET", "/checkstatus/?id={contract_id}&party=" + party, true );
-					xhttp.send();
-				}}
-				function loopStatus( party ) {{
-					checkStatus( party );
-					if ( document.getElementById( "completion message" ).style.display != "block" ) {{
-						setTimeout( function() {{ loopStatus( party ); }}, 5000 );
-					}}
-				}}
-				loopStatus( 1 );
-				loopStatus( 2 );
-                        </script>
-                        <script>
-                                function longBars() {{
-                                        document.getElementById( "leftside" ).style.height = document.body.offsetHeight + "px";
-                                        document.getElementById( "rightside" ).style.height = document.body.offsetHeight + "px";
-                                }}
-                                longBars();
-                        </script>
-                        <script>
-                                json = {contract};
-                                document.getElementById( "description" ).innerText = json[ "description" ];
-                                document.getElementById( "details" ).innerText = JSON.stringify( json, null, 2 );
-                                document.getElementById( "invoice amount" ).innerText = "for $" + json[ "first party amount" ];
-				if ( Number( json[ "first party amount" ] ) > 0 && json[ "second party hodl invoice" ] == "" ) {{
-					document.getElementsByTagName( "form" )[ 0 ].style.display = "block";
-				}}
-                                if ( Number( json[ "first party amount" ] ) > 0 && json[ "second party hodl invoice" ] != "" ) {{
-					document.getElementById( "instructions if invoiced" ).style.display = "inline";
-				}}
-                                if ( document.getElementsByTagName( "form" )[ 0 ].style.display == "none" ) {{
-					document.getElementById( "instructions" ).style.display = "block";
-                                }}
-                        </script>
+            <!DOCTYPE html>
+            <html style="min-height: 100%">
+            <head>
+                <style>
+                    * {{
+                        box-sizing: border-box;
+                    }}
+                </style>
+            </head>
+            <body style="height: 100%; margin: 0px; font-family: Helvetica, sans-serif;">
+                <script src="{qrcodejsfile}"></script>
+                <div id="header" style="height: 50px; background-color: red;">
+                    <h1 style="padding: 7px; color: white; margin: 0;">
+                        Hodl contracts
+                    </h1>
                 </div>
+                <div style="display: flex;">
+                    <div id="leftside" style="min-height: calc( 100vh - 50px );background-color: orange; width: 25%;">
+                    </div>
+                    <div id="middle" style="width: 50%; padding: 0 0.5rem;">
+                        <div>
+                            <h2>
+                                Contract {contract_id_short}
+                            </h2>
+                            <p id="description"></p>
+                            <form method="post" action="/?processing=true&id={contract_id}&party={party}" style="display: none;">
+                                <p>
+                                    Enter an invoice <span id="invoice amount"></span>
+                                </p>
+        						<p>
+                                    <input type="text" style="width: 100%; border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px;" id="invoice" name="invoice" placeholder="lnbc1482n0jf9t0wasfjfas9f20fj0fa0...">
+        						</p>
+        						<p>
+                                    <button type="submit" style="border: 2px solid black; border-radius: 5px; height: 40px; font-size: 18px; cursor: pointer;">Submit</button>
+        						</p>
+                            </form>
+        					<div id="invoice container" style="display: none;">
+        						Deposit funds to this smart contract<br>
+        						<a href="lightning:{fpinvoice}">
+        							<div id="invoice div" style="max-width: 300px; margin: auto;">
+        							</div>
+        						</a>
+        					</div>
+        					<p id="instructions" style="display: none;">
+        						<span id="instructions if invoiced" style="display: none;">You have already submitted your invoice. </span><span id="instructions if awaiting counterparty invoice" style="display: none;">Please wait while your counterparty creates an invoice. Check back later. </span><span id="instructions if awaiting counterparty deposit" style="display: none;">Please wait while your counterparty pays your invoice. Check back later. </span><span id="instructions if awaiting settlement" style="display: none;">Please await your settlement date (visible in the contract details below) and contact your oracle for more info.</span>
+        					</p>
+        					<p id="payment received" style="display: none;">
+        						You received a payment from your counterparty
+        					</p>
+        					<p id="payment sent" style="display: none;">
+        						Your payment to your counterparty went through
+        					</p>
+        					<p id="payment not received" style="display: none;">
+        						The oracle canceled a payment from your counterparty to you
+        					</p>
+        					<p id="payment not sent" style="display: none;">
+        						The oracle canceled a payment from you to your counterparty
+        					</p>
+        					<p id="completion message" style="display: none;">
+        						This contract is complete
+        					</p>
+        					<p id="details button" style="text-decoration: underline; cursor: pointer;" onclick="if ( this.nextElementSibling.style.display != 'none' ) {{this.nextElementSibling.style.display = 'none'; }} else {{this.nextElementSibling.style.display = 'block';}}">
+        						View contract details
+        					</p>
+        					<p id="details" style="display: none; white-space: pre-wrap; word-wrap: break-word;">
+        					</p>
+                        </div>
+                    </div>
+                    <div id="rightside" style="background-color: blue; width: 25%;">
+                        <div style="margin: 10px; color: white;">
+                        </div>
+                    </div>
+                </div>
+    			<script>
+    				function createQR( data ) {{
+                    	var dataUriPngImage = document.createElement( "img" ),
+                    	s = QRCode.generatePNG( data, {{
+                	        ecclevel: "M",
+                	        format: "html",
+                	        fillcolor: "#FFFFFF",
+                	        textcolor: "#373737",
+                	        margin: 4,
+                	        modulesize: 8
+                    	}});
+                    	dataUriPngImage.src = s;
+                    	dataUriPngImage.id = "lnurl-auth-image";
+    					dataUriPngImage.style = "width: 100%;";
+    					return dataUriPngImage;
+                	}}
+    			</script>
+                <script>
+    				function checkStatus( party ) {{
+    					var fpinvoice = "{fpinvoice}";
+                        var spinvoice = "{spinvoice}";
+    					var xhttp = new XMLHttpRequest();
+    					xhttp.onreadystatechange = function() {{
+    						if ( this.readyState == 4 && this.status == 200 ) {{
+    							if ( party == 2 ) {{
+    								if ( xhttp.responseText == "Canceled" ) {{
+    									document.getElementById( "payment not received" ).style.display = "block";
+    									document.getElementById( "instructions" ).style.display = "none";
+    									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
+    									document.getElementById( "completion message" ).style.display = "block";
+    								}}
+    								if ( xhttp.responseText == "Settled" ) {{
+    									document.getElementById( "payment received" ).style.display = "block";
+    									document.getElementById( "instructions" ).style.display = "none";
+    									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
+    									document.getElementById( "completion message" ).style.display = "block";
+    								}}
+    							}}
+                                if ( party == 1 ) {{
+    								var p2amt = "{p2amt}";
+    								if ( xhttp.responseText == "No interaction yet" ) {{
+    									if ( Number( p2amt ) > 0 ) {{
+    										document.getElementById( "instructions if awaiting counterparty invoice" ).style.display = "inline";
+    									}} else {{
+    										document.getElementById( "instructions if awaiting counterparty deposit" ).style.display = "inline";
+    									}}
+    									document.getElementById( "instructions if awaiting settlement" ).style.display = "none";
+    								}}
+    								if ( xhttp.responseText == "Waiting on other party" && spinvoice != "" ) {{
+    									document.getElementById( "instructions" ).style.display = "none";
+    									document.getElementById( "invoice container" ).style.display = "block";
+    									if ( !document.getElementById( "invoice div" ).innerHTML.includes( "img" ) ) {{
+    										if ( fpinvoice != "" ) {{
+    											document.getElementById( "invoice div" ).appendChild( createQR( "{fpinvoice}".toUpperCase() ) );
+    										}} else {{
+    											window.location.reload();
+    										}}
+    									}}
+    								}} else {{
+    									document.getElementById( "invoice container" ).style.display = "none";
+    								}}
+    								if ( xhttp.responseText == "Contract funded, awaiting settlement" ) {{
+    									document.getElementById( "instructions if awaiting counterparty invoice" ).style.display = "none";
+    									document.getElementById( "instructions if awaiting settlement" ).style.display = "inline";
+    									document.getElementById( "instructions" ).style.display = "block";
+    								}}
+    								if ( xhttp.responseText == "Settled" ) {{
+    									document.getElementById( "payment sent" ).style.display = "block";
+    									document.getElementById( "instructions" ).style.display = "none";
+    									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
+    									document.getElementById( "completion message" ).style.display = "block";
+    								}}
+    								if ( xhttp.responseText == "Canceled" ) {{
+    									document.getElementById( "payment not sent" ).style.display = "block";
+    									document.getElementById( "instructions" ).style.display = "none";
+    									document.getElementsByTagName( "form" )[ 0 ].style.display = "none";
+    									document.getElementById( "completion message" ).style.display = "block";
+    								}}
+    							}}
+    						}}
+    					}}
+    					xhttp.open( "GET", "/checkstatus/?id={contract_id}&party=" + party, true );
+    					xhttp.send();
+    				}}
+    				function loopStatus( party ) {{
+    					checkStatus( party );
+    					if ( document.getElementById( "completion message" ).style.display != "block" ) {{
+    						setTimeout( function() {{ loopStatus( party ); }}, 5000 );
+    					}}
+    				}}
+    				loopStatus( 1 );
+    				loopStatus( 2 );
+                </script>
+                <script>
+                    json = {contract};
+                    document.getElementById( "description" ).innerText = json[ "description" ];
+                    document.getElementById( "details" ).innerText = JSON.stringify( json, null, 2 );
+                    document.getElementById( "invoice amount" ).innerText = "for $" + json[ "first party amount" ];
+    				if ( Number( json[ "first party amount" ] ) > 0 && json[ "second party hodl invoice" ] == "" ) {{
+    					document.getElementsByTagName( "form" )[ 0 ].style.display = "block";
+    				}}
+                    if ( Number( json[ "first party amount" ] ) > 0 && json[ "second party hodl invoice" ] != "" ) {{
+    					document.getElementById( "instructions if invoiced" ).style.display = "inline";
+    				}}
+                    if ( document.getElementsByTagName( "form" )[ 0 ].style.display == "none" ) {{
+			           document.getElementById( "instructions" ).style.display = "block";
+                    }}
+                </script>
+            </body>
+            </html>
         """.format( contract_id_short = contract_id[ 0:10 ] + "...", contract_id = contract_id, contract = contract, party = str( request.args.get( "party" ) ), fpinvoice = fpinvoice, spinvoice = spinvoice, qrcodejsfile = url_for( "static", filename="qrcode.js" ), p1amt = p1amt, p2amt = p2amt )
         return returnable
     return ""
