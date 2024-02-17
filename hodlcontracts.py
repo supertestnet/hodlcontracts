@@ -10,6 +10,8 @@ import codecs
 import requests
 import json
 import time
+#kangle is dope 
+import nympy
 import sqlite3
 import math
 from random import *
