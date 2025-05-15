@@ -17,7 +17,7 @@ If you fire it up, be aware:
 
 2. When you start the app, visit this link in your browser: http://127.0.0.1:5000/admin/
 
-3. Prepare a draft contract by selecting one of the available templates or make it however you want. The lefthand sidebar now shows all contracts but it needs pagination or something (I'll probably put create a special page instead of putting them in a sidebar). There is also groundwork laid for indicator lights on each existing contract but right now it is always green (indicating "ready to settle") even for contracts that are not ready to settle (which should have a red indicator)
+3. Prepare a draft contract by selecting one of the available templates or make it however you want. The lefthand sidebar now shows all contracts but it needs pagination or something (I'll probably create a special page instead of putting them in a sidebar). There is also groundwork laid for indicator lights on each existing contract but right now it is always green (indicating "ready to settle") even for contracts that are not ready to settle (which should have a red indicator)
 
 4. On the contract page you have buttons to settle or cancel each party's invoices and buttons to give to the counterparties where they can submit their invoices
 
